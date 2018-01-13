@@ -77,8 +77,6 @@ $(document).ready(function () {
         }
 
         var populateModals = function () {
-            console.log($(this).text());
-            
             for (var i = 0; i < infoArray.length; i++) {
                 if (infoArray[i].restName === $(this).text()) {
                     $('.modal-body').empty();
