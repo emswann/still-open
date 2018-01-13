@@ -1,7 +1,5 @@
-// function initMap() {}
-
 $(document).ready(function () {
-    var map, location;
+    var map, location, marker;
 
     function GoogleMap(position) {
         location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -12,7 +10,7 @@ $(document).ready(function () {
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
 
-        var marker = new google.maps.Marker({
+        marker = new google.maps.Marker({
             map: map,
             position: location,
             animation: google.maps.Animation.DROP,
