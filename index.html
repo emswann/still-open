@@ -6,15 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Still Open?</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Application specific stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- Application specific javascript -->
     <script src="assets/javascript/app.js"></script>
 </head>
 
 <body>
+    <!-- Button trigger restaurant info modal -->
+    <!-- Found in restaurant list divs -->
+
+    <!-- Restaurant info modal -->
+    <div class="modal fade" id="rest-info-modal" tabindex="-1" role="dialog" data-backdrop="true" aria-labelledby="rest-info-modal-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="rest-info-modal-label">Restaurant Info</h4>
+                </div>
+                <div class="modal-body">
+                    <h3>Name</h3>
+                    <h3>Address</h3>
+                    <h3>Venue</h3>
+                    <h3>Hours</h3>
+                    <h3>Cost</h3>
+                    <img src="http://via.placeholder.com/100x100" class="img-responsive" alt="Image">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="jumbotron">
         <div class="container">
@@ -22,43 +63,89 @@
         </div>
     </div>
 
-
     <div class="container">
 
         <div class="col-xs-12 col-sm-12 col-md-6 ">
-
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-1" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 1
+                    </button>
+                </div>
             </div>
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-2" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 2
+                    </button>
+                </div>
             </div>
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-3" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 3
+                    </button>
+                </div>
             </div>
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-4" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 4
+                    </button>
+                </div>
             </div>
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-5" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 5
+                    </button>
+                </div>
             </div>
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-6" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 6
+                    </button>
+                </div>
             </div>
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-7" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 7
+                    </button>
+                </div>
             </div>
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-8" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 8
+                    </button>
+                </div>
             </div>
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-9" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 9
+                    </button>
+                </div>
             </div>
             <div class="row list">
-                <h3 class="text-center">Restaurant 1</h3>
+                <div class="restaurant">
+                    <!-- Must be linked to restaurant info modal -->
+                    <button type="button" class="btn btn-default" id="item-10" data-toggle="modal" data-target="#rest-info-modal">
+                        Restaurant 10
+                    </button>
+                </div>
             </div>
-            
-            
 
             <div class="row">
 
