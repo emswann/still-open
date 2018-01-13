@@ -77,7 +77,21 @@ $(document).ready(function () {
         }
 
         var populateModals = function () {
-            console.log($(this));
+            console.log($(this).text());
+            
+            for (var i = 0; i < infoArray.length; i++) {
+                if (infoArray[i].restName === $(this).text()) {
+                    $('.modal-body').empty();
+                    var modalLine = $('<h3>').text(infoArray[i].restName)
+                    $('.modal-body').append(modalLine);
+                    modalLine = $('<h3>').text(infoArray[i].restLoc)
+                    $('.modal-body').append(modalLine);
+                    modalLine = $('<h3>').text(infoArray[i].restVen)
+                    $('.modal-body').append(modalLine);
+                    modalLine = $('<h3>').text(infoArray[i].restOpen)
+                    $('.modal-body').append(modalLine);
+                }
+            }
         }
 
         var render = function () {
@@ -85,7 +99,7 @@ $(document).ready(function () {
         }
 
         render();
-        // document.on('click', $(), populateModals);
+        $(document).on("click", '[data-toggle="modal"]', populateModals);
 
     });
 });
