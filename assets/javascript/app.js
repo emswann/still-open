@@ -14,7 +14,8 @@ $(document).ready(function () {
             map: map,
             position: location,
             animation: google.maps.Animation.DROP,
-            title: "This is your location"
+            title: "This is your location",
+            icon: "assets/images/bluemarker.png"
         });
 
         map.setCenter(location);
