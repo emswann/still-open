@@ -43,6 +43,9 @@ $(document).ready(function () {
     } else {
         showError();
     }
+    
+    $("#addr-modal").modal("show");
+    
     //hardcoded for now, will grab these dynamically later
     var lat = 32.07967
     var long = -81.0927
