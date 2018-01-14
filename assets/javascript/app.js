@@ -43,7 +43,6 @@ $(document).ready(function () {
     } else {
         showError();
     }
-})
     //hardcoded for now, will grab these dynamically later
     var lat = 32.07967
     var long = -81.0927
