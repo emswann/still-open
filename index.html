@@ -22,6 +22,9 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+    <!-- Google Maps JavaScript library -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHJqlNREO1QpaDF_ZwGt6M2CedgpZ4L7I" async defer></script>
+
     <!-- Application specific javascript -->
     <script src="assets/javascript/app.js"></script>
 </head>
@@ -188,40 +191,37 @@
             </div>
 
             <div class="row">
-
                 <button type="button" class="btn btn-default">NEXT</button>
-
             </div>
 
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 ">
-            
-            <img src="http://via.placeholder.com/500x500" class="img-responsive" alt="Image">
-            
+        <div class="col-xs-12 col-sm-12 col-md-6">
+
             <div class="row">
-                
+                <div id="map"></div>
+            </div>
+
+            <div class="row">
                 <div class="radio">
                     <label>
-                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="" checked="checked">
+                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="">
                         1 Mile
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="" checked="checked">
+                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="" checked>
                         5 mile
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="" checked="checked">
+                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="">
                         10 mile
                     </label>
-                </div>
-                
+                </div>           
             </div>
-            
-            
+
         </div>
 
     </div>
