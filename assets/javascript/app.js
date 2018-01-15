@@ -44,6 +44,7 @@ $(document).ready(function () {
         showError();
     }
 })
+    
     $("#addr-modal").modal("show");
     
     //hardcoded for now, will grab these dynamically later
