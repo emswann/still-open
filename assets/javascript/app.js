@@ -45,7 +45,7 @@ $(document).ready(function () {
     }
     
     $("#addr-modal").modal("show");
-    
+
     //hardcoded for now, will grab these dynamically later
     var lat = 32.07967
     var long = -81.0927
@@ -120,35 +120,35 @@ $(document).ready(function () {
         }
         console.log(infoArray);
 
-        var populateLabels = function () {
+        var populateRestLabels = function () {
             for (var i = 0; i < 11; i++) {
                 var labelId = $("#item-" + i);
                 labelId.text(infoArray[i].restName)
             }
         }
 
-        var populateModals = function () {
+        var populateRestInfo = function () {
             for (var i = 0; i < infoArray.length; i++) {
                 if (infoArray[i].restName === $(this).text()) {
-                    $('.modal-body').empty();
+                    $('#info-modal-body').empty();
                     var modalLine = $('<h3>').text(infoArray[i].restName)
-                    $('.modal-body').append(modalLine);
+                    $('#info-modal-body').append(modalLine);
                     modalLine = $('<h3>').text(infoArray[i].restLoc)
-                    $('.modal-body').append(modalLine);
+                    $('#info-modal-body').append(modalLine);
                     modalLine = $('<h3>').text(infoArray[i].restVen)
-                    $('.modal-body').append(modalLine);
+                    $('#info-modal-body').append(modalLine);
                     modalLine = $('<h3>').text(infoArray[i].restOpen)
-                    $('.modal-body').append(modalLine);
+                    $('#info-modal-body').append(modalLine);
                 }
             }
         }
 
         var render = function () {
-            populateLabels();
+            populateRestLabels();
         }
 
         render();
-        $(document).on("click", '[data-toggle="modal"]', populateModals);
+        $(document).on("click", ".btn-restaurant", populateRestInfo);
 
     });
 });
