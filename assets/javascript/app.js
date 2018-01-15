@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var map, location, marker, geocoder;
+    var map, location, marker, geocoder, service, infowindow;
     var infoArray = [];
 
     // Immediately (self) invoked function which initializes application after document is loaded.
@@ -36,7 +36,8 @@ $(document).ready(function () {
         });
 
         map.setCenter(location);
-        renderRestList();
+        service = new google.maps.places.PlacesService(map);
+        renderRestList(service);
     }
 
     // Removed call to showError in navigator.geolocation.
@@ -111,91 +112,122 @@ $(document).ready(function () {
         }
     }
 
-    var renderRestList = function() {
+    var renderRestList = function(arg) {
 
         // Use current location (global variable) to determine restaurant list.
         console.log("RL Latitude: " + location.lat());
         console.log("RL Longitude: " + location.lng());
 
-        var queryURL = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?";
+        infowindow = new google.maps.InfoWindow();
 
-        const API_KEY = "Kgr239ubbiqdhS_iZKqYRUeLSSQB085HltHPbeeQoPb_TXjRrjhFRCn8YKQ9h9j6YSzfG7znnvTdGQPCykmGNMOpzX1vjGJ7NpTFXb0pka_jOXdgfQxvfwsfKCdaWnYx";
+        arg.nearbySearch({
+            location: {
+                lat: location.lat(),
+                lng: location.lng()
+            },
+            radius: 2000,
+            type: ['restaurant']
+        }, callback);
 
-        const authHeader = {
-        Authorization: "Bearer " + API_KEY
-        };
-
-        queryURL += $.param({
-            term: 'restaurants',
-            latitude: location.lat(),
-            longitude: location.lng()
-        });
-
-        $.ajax({
-            url: queryURL,
-            method: 'GET',
-            headers: authHeader,
-        }).done(function (response) {
-
-            var array = response.businesses;
-
-            //pulls vendor info from API array
-            var vendorLoop = function (arg) {
-                var vendorArray = [];
-                if (Array.isArray(array)) {
-                    for (var n = 0; n < arg.length; n++) {
-                        var element = arg[n].title;
-                        vendorArray.push(element);
-                    }
-                    return vendorArray;
+        function callback(results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
                 }
             }
+        }
 
-            //pulls location info from API array
-            var locationLoop = function (arg) {
-                var locationArray = [];
-                if (Array.isArray(array)) {
-                    for (var m = 0; m < arg.length; m++) {
-                        var element = arg[m];
-                        locationArray.push(element);
-                    }
-                    return locationArray;
-                }
+        function createMarker(place) {
+            var placeLoc = place.geometry.location;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(place.name);
+                infowindow.open(map, this);
+              });
             }
 
-            //reads the is_closed data in the API array
-            var isOpen = function (arg) {
-                if (!arg) {
-                    return "Open";
-                } else {
-                    return "Closed";
-                }
-            }
+        // var queryURL = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?";
 
-            var populateLabels = function () {
-                for (var i = 0; i < 11; i++) {
-                    var labelId = $("#item-" + i);
-                    labelId.text(infoArray[i].restName)
-                }
-            }
+        // const API_KEY = "Kgr239ubbiqdhS_iZKqYRUeLSSQB085HltHPbeeQoPb_TXjRrjhFRCn8YKQ9h9j6YSzfG7znnvTdGQPCykmGNMOpzX1vjGJ7NpTFXb0pka_jOXdgfQxvfwsfKCdaWnYx";
 
-            for (var i = 0; i < array.length; i++) {
-                var restArray = array[i];
-                var restObj = {
-                    restName: restArray.name,
-                    restVen: vendorLoop(restArray.categories),
-                    restOpen: isOpen(restArray.is_closed),
-                    restCost: restArray.price,
-                    restLoc: locationLoop(restArray.location.display_address)
-                }
+        // const authHeader = {
+        // Authorization: "Bearer " + API_KEY
+        // };
 
-                infoArray.push(restObj);
-            }
+        // queryURL += $.param({
+        //     term: 'restaurants',
+        //     latitude: location.lat(),
+        //     longitude: location.lng()
+        // });
 
-            console.log("RL Info: ", infoArray);
+        // $.ajax({
+        //     url: queryURL,
+        //     method: 'GET',
+        //     headers: authHeader,
+        // }).done(function (response) {
 
-            populateLabels();
-        });
+        //     var array = response.businesses;
+
+        //     //pulls vendor info from API array
+        //     var vendorLoop = function (arg) {
+        //         var vendorArray = [];
+        //         if (Array.isArray(array)) {
+        //             for (var n = 0; n < arg.length; n++) {
+        //                 var element = arg[n].title;
+        //                 vendorArray.push(element);
+        //             }
+        //             return vendorArray;
+        //         }
+        //     }
+
+        //     //pulls location info from API array
+        //     var locationLoop = function (arg) {
+        //         var locationArray = [];
+        //         if (Array.isArray(array)) {
+        //             for (var m = 0; m < arg.length; m++) {
+        //                 var element = arg[m];
+        //                 locationArray.push(element);
+        //             }
+        //             return locationArray;
+        //         }
+        //     }
+
+        //     //reads the is_closed data in the API array
+        //     var isOpen = function (arg) {
+        //         if (!arg) {
+        //             return "Open";
+        //         } else {
+        //             return "Closed";
+        //         }
+        //     }
+
+        //     var populateLabels = function () {
+        //         for (var i = 0; i < 11; i++) {
+        //             var labelId = $("#item-" + i);
+        //             labelId.text(infoArray[i].restName)
+        //         }
+        //     }
+
+        //     for (var i = 0; i < array.length; i++) {
+        //         var restArray = array[i];
+        //         var restObj = {
+        //             restName: restArray.name,
+        //             restVen: vendorLoop(restArray.categories),
+        //             restOpen: isOpen(restArray.is_closed),
+        //             restCost: restArray.price,
+        //             restLoc: locationLoop(restArray.location.display_address)
+        //         }
+
+        //         infoArray.push(restObj);
+        //     }
+
+        //     console.log("RL Info: ", infoArray);
+
+        //     populateLabels();
+        // });
     }
 
     var populateRestInfo = function () {
