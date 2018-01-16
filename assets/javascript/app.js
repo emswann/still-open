@@ -143,7 +143,6 @@ $(document).ready(function () {
                 if (details !== null) {
                     infoArray.push(details)
                 }
-                console.log(infoArray);
 
                 function costFormat (arg) {
                     if (arg === 0) {
