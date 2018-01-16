@@ -125,11 +125,13 @@ $(document).ready(function () {
                 lat: location.lat(),
                 lng: location.lng()
             },
-            radius: 2000,
-            type: ['restaurant']
+            rankBy: google.maps.places.RankBy.DISTANCE,
+            type: 'restaurant',
+            openNow: true
         }, callback);
 
         function callback(results, status) {
+            // console.log(results)
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 results.forEach(createRestArr);
             }
@@ -188,7 +190,7 @@ $(document).ready(function () {
                     }
                 }
                 restInfoArray.push(restObj);
-                console.log(restInfoArray)
+                // console.log(restInfoArray)
             });
         }
     }
