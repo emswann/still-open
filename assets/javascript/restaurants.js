@@ -45,10 +45,6 @@ Restaurants.prototype.get = function(index) {
     : undefined;
 }
 
-Restaurants.prototype.render = function(startIndex, stopIndex) {
-  // put this in a separate file? with other render functions?
-}
-
 Restaurants.prototype.delete = function(index) {
   isSuccess = false;
 
@@ -57,7 +53,7 @@ Restaurants.prototype.delete = function(index) {
     isSuccess = true;
   }  
 
-  return isSuccess;
+  return [isSuccess, this.restaurantArray];
 }
 
 
