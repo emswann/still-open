@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var map, location, marker, geocoder, service, infowindow;
-    var infoArray = [];
+    var restAPIArray = [];
     var restInfoArray = [];
 
     // Immediately (self) invoked function which initializes application after document is loaded.
@@ -38,7 +38,7 @@ $(document).ready(function () {
 
         map.setCenter(location);
         service = new google.maps.places.PlacesService(map);
-        renderRestList();
+        getRestaurants();
     }
 
     // Removed call to showError in navigator.geolocation.
@@ -113,7 +113,8 @@ $(document).ready(function () {
         }
     }
 
-    var renderRestList = function () {
+    var getRestaurants = function () {
+        const MAX_RADIUS = 2000;
 
         // Use current location (global variable) to determine restaurant list.
         console.log("RL Latitude: " + location.lat());
@@ -125,70 +126,27 @@ $(document).ready(function () {
                 lat: location.lat(),
                 lng: location.lng()
             },
-            radius: 2000,
+            radius: MAX_RADIUS,
             type: ['restaurant']
         }, callback);
 
         function callback(results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                results.forEach(createRestArr);
+                results.forEach(createRestAPIArr);
             }
+            console.log('Restaurant API: ', restAPIArray);
+            // restInfoArray = new Restaurants(restAPIArray);
+            // console.log('Restaurant Info: ', restInfoArray);
         }
 
-        function createRestArr(place) {
+        function createRestAPIArr(place) {
             var request = {
                 placeId: place.place_id
             };
             service.getDetails(request, function (details, status) {
                 if (details !== null) {
-                    infoArray.push(details)
+                    restAPIArray.push(details)
                 }
-
-                function costFormat (arg) {
-                    if (arg === 0) {
-                        return 'Free';
-                    }
-                    else if (arg === 1) {
-                        return '$';
-                    }
-                    else if (arg === 2) {
-                        return '$$';
-                    }
-                    else if (arg === 3) {
-                        return '$$$';
-                    }
-                    else if (arg === 4) {
-                        return '$$$$';
-                    } else {
-                        return 'No pricing info'
-                    }
-                }
-
-                function openHoursFormat (arg) {
-                    if (arg === true) {
-                        return 'Open';
-                    }
-                    else if (arg === false) {
-                        return 'Closed'
-                    } 
-                    else if (arg === undefined) {
-                        return 'No business data available'
-                    }
-                }
-
-                for (var i = 0; i < infoArray.length; i++) {
-                    var restArray = infoArray[i];
-                    var restObj = {
-                        restName: restArray.name,
-                        restCost: costFormat(restArray.price_level),
-                        restLoc: restArray.formatted_address,
-                        restOpen: openHoursFormat(restArray.opening_hours.open_now),
-                        restHours: restArray.opening_hours.weekday_text,
-                        restURL: restArray.website
-                    }
-                }
-                restInfoArray.push(restObj);
-                console.log(restInfoArray)
             });
         }
     }
