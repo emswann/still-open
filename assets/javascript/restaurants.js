@@ -17,7 +17,7 @@ function Restaurants(apiArray) {
     return (function() {
       var restaurantArray = [];
 
-      for (var i = 0; i < apiArray.length; i++) {
+      for (let i = 0; i < apiArray.length; i++) {
         var apiObj = apiArray[i];
 
         if (apiObj.isOpen) {
@@ -53,7 +53,7 @@ Restaurants.prototype.delete = function(index) {
     isSuccess = true;
   }  
 
-  return [isSuccess, this.restaurantArray];
+  return {status: isSuccess, element: this.restaurantArray};
 }
 
 
