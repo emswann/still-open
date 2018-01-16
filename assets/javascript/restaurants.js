@@ -1,7 +1,6 @@
 function Restaurants(apiArray) {
-
   this.restaurantArray = (function() {
-
+    
     function Restaurant(apiObj) {
 
       var formatCost = function (costNum) {
@@ -15,7 +14,7 @@ function Restaurants(apiArray) {
           case 2:
           case 3:
           case 4:
-            for (let i = 1; i < costNum; i++) {
+            for (let i = 0; i < costNum; i++) {
               costStr += '$';
             }
             break;
@@ -26,14 +25,15 @@ function Restaurants(apiArray) {
         return costStr;
       }
 
-      var formatHours = function(hoursStr) {
-
+      var formatHours = function(periodArray, weekdayTxtArray) {
+        return new Hours(periodArray, weekdayTxtArray);
       }
 
       // Assumes always add because validated beforehand.
       this.addressStr      = apiObj.formatted_address;
       this.cost            = formatCost(apiObj.price_level);  
-      this.hoursObj        = formatHours(apiObj.opening_hours.weekday_text);
+      // this.hoursObj        = formatHours(apiObj.opening_hours.periods,
+      //                                    apiObj.opening_hours.weekday_text);
       this.locationObj     = apiObj.geometry.location;
       this.nameStr         = apiObj.name;
       this.phoneStr        = apiObj.formatted_phone_number;
@@ -45,16 +45,13 @@ function Restaurants(apiArray) {
 
       /* Need to preserve the sorted order of the array with for vs. forEach. Constructor assumes all objects are added to restaurant array: list has already been scrubbed for null/undefined or permanently closed restaurants. */
       for (let i = 0; i < apiArray.length; i++) {
-          var restaurantObj = new Restaurant(apiObj);
-          restaurantArray.push(restaurantObj);
+        restaurantArray.push(new Restaurant(apiArray[i]));
       }
 
       // Need to sort by radius.
       return restaurantArray;
     })(); 
-
   })();
-
 }
 
 Restaurants.prototype.array = function() {

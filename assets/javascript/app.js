@@ -114,7 +114,6 @@ $(document).ready(function () {
     }
 
     var getRestaurants = function () {
-        const MAX_RADIUS = 2000;
 
         // Use current location (global variable) to determine restaurant list.
         console.log("RL Latitude: " + location.lat());
@@ -126,8 +125,9 @@ $(document).ready(function () {
                 lat: location.lat(),
                 lng: location.lng()
             },
-            radius: MAX_RADIUS,
-            type: ['restaurant']
+            rankBy: google.maps.places.RankBy.DISTANCE,
+            type: 'restaurant',
+            openNow: true
         }, callback);
 
         function callback(results, status) {
@@ -135,8 +135,8 @@ $(document).ready(function () {
                 results.forEach(createRestAPIArr);
             }
             console.log('Restaurant API: ', restAPIArray);
-            // restInfoArray = new Restaurants(restAPIArray);
-            // console.log('Restaurant Info: ', restInfoArray);
+            restInfoArray = new Restaurants(restAPIArray);
+            console.log('Restaurant Info: ', restInfoArray);
         }
 
         function createRestAPIArr(place) {
