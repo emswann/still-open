@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var map, location, marker, geocoder, service, infowindow;
     var infoArray = [];
+    var restInfoArray = [];
 
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
@@ -37,7 +38,7 @@ $(document).ready(function () {
 
         map.setCenter(location);
         service = new google.maps.places.PlacesService(map);
-        renderRestList(service);
+        renderRestList();
     }
 
     // Removed call to showError in navigator.geolocation.
@@ -112,15 +113,14 @@ $(document).ready(function () {
         }
     }
 
-    var renderRestList = function(arg) {
+    var renderRestList = function () {
 
         // Use current location (global variable) to determine restaurant list.
         console.log("RL Latitude: " + location.lat());
         console.log("RL Longitude: " + location.lng());
 
         infowindow = new google.maps.InfoWindow();
-
-        arg.nearbySearch({
+        service.nearbySearch({
             location: {
                 lat: location.lat(),
                 lng: location.lng()
@@ -131,121 +131,69 @@ $(document).ready(function () {
 
         function callback(results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    createMarker(results[i]);
+                results.forEach(createRestArr);
+            }
+        }
+
+        function createRestArr(place) {
+            var request = {
+                placeId: place.place_id
+            };
+            service.getDetails(request, function (details, status) {
+                if (details !== null) {
+                    infoArray.push(details)
                 }
-            }
-        }
+                console.log(infoArray);
 
-        function createMarker(place) {
-            var placeLoc = place.geometry.location;
-            var marker = new google.maps.Marker({
-                map: map,
-                position: place.geometry.location
+                function costFormat (arg) {
+                    if (arg === 0) {
+                        return 'Free';
+                    }
+                    else if (arg === 1) {
+                        return '$';
+                    }
+                    else if (arg === 2) {
+                        return '$$';
+                    }
+                    else if (arg === 3) {
+                        return '$$$';
+                    }
+                    else if (arg === 4) {
+                        return '$$$$';
+                    } else {
+                        return 'No pricing info'
+                    }
+                }
+
+                function openHoursFormat (arg) {
+                    if (arg === true) {
+                        return 'Open';
+                    }
+                    else if (arg === false) {
+                        return 'Closed'
+                    } 
+                    else if (arg === undefined) {
+                        return 'No business data available'
+                    }
+                }
+
+                for (var i = 0; i < infoArray.length; i++) {
+                    var restArray = infoArray[i];
+                    var restObj = {
+                        restName: restArray.name,
+                        restCost: costFormat(restArray.price_level),
+                        restLoc: restArray.formatted_address,
+                        restOpen: openHoursFormat(restArray.opening_hours.open_now),
+                        restHours: restArray.opening_hours.weekday_text,
+                        restURL: restArray.website
+                    }
+                }
+                restInfoArray.push(restObj);
+                console.log(restInfoArray)
             });
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent(place.name);
-                infowindow.open(map, this);
-              });
-            }
-
-        // var queryURL = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?";
-
-        // const API_KEY = "Kgr239ubbiqdhS_iZKqYRUeLSSQB085HltHPbeeQoPb_TXjRrjhFRCn8YKQ9h9j6YSzfG7znnvTdGQPCykmGNMOpzX1vjGJ7NpTFXb0pka_jOXdgfQxvfwsfKCdaWnYx";
-
-        // const authHeader = {
-        // Authorization: "Bearer " + API_KEY
-        // };
-
-        // queryURL += $.param({
-        //     term: 'restaurants',
-        //     latitude: location.lat(),
-        //     longitude: location.lng()
-        // });
-
-        // $.ajax({
-        //     url: queryURL,
-        //     method: 'GET',
-        //     headers: authHeader,
-        // }).done(function (response) {
-
-        //     var array = response.businesses;
-
-        //     //pulls vendor info from API array
-        //     var vendorLoop = function (arg) {
-        //         var vendorArray = [];
-        //         if (Array.isArray(array)) {
-        //             for (var n = 0; n < arg.length; n++) {
-        //                 var element = arg[n].title;
-        //                 vendorArray.push(element);
-        //             }
-        //             return vendorArray;
-        //         }
-        //     }
-
-        //     //pulls location info from API array
-        //     var locationLoop = function (arg) {
-        //         var locationArray = [];
-        //         if (Array.isArray(array)) {
-        //             for (var m = 0; m < arg.length; m++) {
-        //                 var element = arg[m];
-        //                 locationArray.push(element);
-        //             }
-        //             return locationArray;
-        //         }
-        //     }
-
-        //     //reads the is_closed data in the API array
-        //     var isOpen = function (arg) {
-        //         if (!arg) {
-        //             return "Open";
-        //         } else {
-        //             return "Closed";
-        //         }
-        //     }
-
-        //     var populateLabels = function () {
-        //         for (var i = 0; i < 11; i++) {
-        //             var labelId = $("#item-" + i);
-        //             labelId.text(infoArray[i].restName)
-        //         }
-        //     }
-
-        //     for (var i = 0; i < array.length; i++) {
-        //         var restArray = array[i];
-        //         var restObj = {
-        //             restName: restArray.name,
-        //             restVen: vendorLoop(restArray.categories),
-        //             restOpen: isOpen(restArray.is_closed),
-        //             restCost: restArray.price,
-        //             restLoc: locationLoop(restArray.location.display_address)
-        //         }
-
-        //         infoArray.push(restObj);
-        //     }
-
-        //     console.log("RL Info: ", infoArray);
-
-        //     populateLabels();
-        // });
-    }
-
-    var populateRestInfo = function () {
-        for (var i = 0; i < infoArray.length; i++) {
-            if (infoArray[i].restName === $(this).text()) {
-                $('#info-modal-body').empty();
-                var modalLine = $('<h3>').text(infoArray[i].restName)
-                $('#info-modal-body').append(modalLine);
-                modalLine = $('<h3>').text(infoArray[i].restLoc)
-                $('#info-modal-body').append(modalLine);
-                modalLine = $('<h3>').text(infoArray[i].restVen)
-                $('#info-modal-body').append(modalLine);
-                modalLine = $('<h3>').text(infoArray[i].restOpen)
-                $('#info-modal-body').append(modalLine);
-            }
         }
     }
 
-    $(document).on("click", ".btn-restaurant", populateRestInfo);
+    // $(document).on("click", ".btn-restaurant", populateRestInfo);
     $("#btn-addr").on("click", processAddr);
 });
