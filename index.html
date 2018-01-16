@@ -23,7 +23,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!-- Google Maps JavaScript library -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHJqlNREO1QpaDF_ZwGt6M2CedgpZ4L7I" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHJqlNREO1QpaDF_ZwGt6M2CedgpZ4L7I&libraries=places" async defer></script>
 
     <!-- Application specific javascript -->
     <script src="assets/javascript/app.js"></script>
@@ -63,7 +63,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="addr-modal-label">Enter Address:</h4>
+                    <h4 class="modal-title" id="addr-modal-label">Cannot resolve location. Please enter address.</h4>
                 </div>
                 <div class="modal-body" id="addr-modal-body">
                     <form>
@@ -83,7 +83,7 @@
                             <label for="addr-zipcode">Zip Code</label>
                             <input type="number" class="form-control" id="addr-zipcode" placeholder="">
                         </div>
-                        <button type="submit" class="btn btn-primary" id="addr-btn">Submit</button>
+                        <button type="submit" class="btn btn-primary" id="btn-addr">Submit</button>
                     </form>
                 </div>
                 <div class="modal-footer">
