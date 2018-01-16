@@ -25,15 +25,15 @@ function Restaurants(apiArray) {
         return costStr;
       }
 
-      var formatHours = function(periodArray, weekdayTxtArray) {
-        return new Hours(periodArray, weekdayTxtArray);
+      var formatHours = function(periodArray, weekdayTextArray) {
+        return new Hours(periodArray, weekdayTextArray);
       }
 
       // Assumes always add because validated beforehand.
       this.addressStr      = apiObj.formatted_address;
       this.cost            = formatCost(apiObj.price_level);  
-      // this.hoursObj        = formatHours(apiObj.opening_hours.periods,
-      //                                    apiObj.opening_hours.weekday_text);
+      this.hoursObj        = formatHours(apiObj.opening_hours.periods,
+                                         apiObj.opening_hours.weekday_text);
       this.locationObj     = apiObj.geometry.location;
       this.nameStr         = apiObj.name;
       this.phoneStr        = apiObj.formatted_phone_number;

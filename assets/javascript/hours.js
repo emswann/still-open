@@ -13,15 +13,20 @@ function Hours(periodArray, weekdayTextArray) {
     }
 
     return (function() {
+      const PERIOD_SUNDAY = 0;
+      const WEEKDAY_TEXT_SUNDAY = 6;
+
       var hoursArray = [];
 
       /* Use periodArray as the driver. 0 = Sunday. 6 = Saturday. weekdayTxtArray starts at 0 = Monday, so need to adjust for values. */
-      for (let i = 0, j = 1; i < periodArray.length; i++, j++) {
+      for (let i = PERIOD_SUNDAY, j = WEEKDAY_TEXT_SUNDAY; 
+               i < periodArray.length; 
+               i++, j++) {
         if (j === periodArray.length) {
           j = 0;
         }
 
-        hoursArray.push(new Hour(periodArray[i], weekdayTextArray[j]));
+        hoursArray.push(new DayOfWeek(periodArray[i], weekdayTextArray[j]));
       }
 
       // Need to sort by radius.
