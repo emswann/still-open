@@ -63,51 +63,6 @@ $(document).ready(function () {
     function promptUserAddr() {
         $("#addr-modal").modal("show");
     }
-<<<<<<< HEAD
-})
-    
-    $("#addr-modal").modal("show");
-
-    //hardcoded for now, will grab these dynamically later
-    var lat = 32.07967
-    var long = -81.0927
-
-    var queryURL = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?";
-
-    const API_KEY = "Kgr239ubbiqdhS_iZKqYRUeLSSQB085HltHPbeeQoPb_TXjRrjhFRCn8YKQ9h9j6YSzfG7znnvTdGQPCykmGNMOpzX1vjGJ7NpTFXb0pka_jOXdgfQxvfwsfKCdaWnYx";
-
-    const authHeader = {
-        Authorization: "Bearer " + API_KEY
-    };
-
-    queryURL += $.param({
-        term: 'restaurants',
-        latitude: lat,
-        longitude: long
-    });
-
-    $.ajax({
-        url: queryURL,
-        method: 'GET',
-        headers: authHeader,
-    }).done(function (response) {
-
-        var array = response.businesses;
-        var infoArray = [];
-
-        //pulls vendor info from API array
-        var vendorLoop = function (arg) {
-            var vendorArray = [];
-            if (Array.isArray(array)) {
-                for (var n = 0; n < arg.length; n++) {
-                    var element = arg[n].title;
-                    vendorArray.push(element);
-                }
-                return vendorArray;
-            }
-        }
-=======
->>>>>>> eb55edfdd08c21713e1413101dc1676dc4c08cd2
 
     function convertAddr(addressObj) {
 
