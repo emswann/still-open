@@ -1,18 +1,18 @@
 $(document).ready(function () {
-    var map, location, marker, geocoder, service, infowindow;
+    var map, location, marker, geocoder, service, infoWindow;
     var infoArray = [];
     var restInfoArray = [];
 
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(GoogleMap, promptUserAddr);
+            navigator.geolocation.getCurrentPosition(googleMap, promptUserAddr);
         } else {
             promptUserAddr();
         }
     })();
 
-    function GoogleMap(position) {
+    function googleMap(position) {
         location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
         console.log("GM Latitude: " + location.lat());
@@ -119,7 +119,7 @@ $(document).ready(function () {
         console.log("RL Latitude: " + location.lat());
         console.log("RL Longitude: " + location.lng());
 
-        infowindow = new google.maps.InfoWindow();
+        infoWindow = new google.maps.InfoWindow();
         service.nearbySearch({
             location: {
                 lat: location.lat(),
@@ -177,7 +177,7 @@ $(document).ready(function () {
                         return 'No business data available'
                     }
                 }
-
+                
                 for (var i = 0; i < infoArray.length; i++) {
                     var restArray = infoArray[i];
                     var restObj = {

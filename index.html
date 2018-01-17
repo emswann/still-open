@@ -8,25 +8,30 @@
     <title>Still Open?</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
 
     <!-- Application specific stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
 
     <!-- Google Maps JavaScript library -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHJqlNREO1QpaDF_ZwGt6M2CedgpZ4L7I&libraries=places" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRVsZ01WM5wp4fnm7Ell1PgzCnYdOVPd4&libraries=places" async
+        defer></script>
 
     <!-- Application specific javascript -->
     <script src="assets/javascript/app.js"></script>
+    <script src="assets/javascript/renderList.js"></script>
 </head>
 
 <body>
@@ -103,120 +108,32 @@
 
     <div class="container">
 
-        <div class="col-xs-12 col-sm-12 col-md-6 ">
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-1" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 1
-                    </button>
-                </div>
-            </div>
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-2" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 2
-                    </button>
-                </div>
-            </div>
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-3" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 3
-                    </button>
-                </div>
-            </div>
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-4" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 4
-                    </button>
-                </div>
-            </div>
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-5" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 5
-                    </button>
-                </div>
-            </div>
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-6" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 6
-                    </button>
-                </div>
-            </div>
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-7" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 7
-                    </button>
-                </div>
-            </div>
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-8" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 8
-                    </button>
-                </div>
-            </div>
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-9" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 9
-                    </button>
-                </div>
-            </div>
-            <div class="row list">
-                <div class="restaurant">
-                    <!-- Must be linked to restaurant info modal -->
-                    <button type="button" class="btn btn-default btn-restaurant" id="item-10" data-toggle="modal" data-target="#info-modal">
-                        Restaurant 10
-                    </button>
-                </div>
-            </div>
-
-            <div class="row">
-                <button type="button" class="btn btn-default btn-next">NEXT</button>
-            </div>
-
+        <div class="col-xs-12 col-sm-12 col-md-6" id="list-container">
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6">
+        <div class="col-xs-12 col-sm-12 col-md-6" id="map-container">
 
             <div class="row">
                 <div id="map"></div>
             </div>
 
-            <div class="row">
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="">
-                        1 Mile
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="" checked>
-                        5 mile
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="">
-                        10 mile
-                    </label>
-                </div>           
+        </div>
+        <div class="row">
+            <button type="button" class="btn btn-default btn-next">NEXT</button>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value=""> 1 Mile
+                </label>
             </div>
-
+            <div class="radio">
+                <label>
+                    <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="" checked> 5 mile
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value=""> 10 mile
+                </label>
+            </div>
         </div>
 
     </div>
