@@ -38,6 +38,7 @@ $(document).ready(function () {
             row.append(rest);
             container.append(row);
             ++currentRest;
+            ++listCount;
         }
     }
     renderList();
