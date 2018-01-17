@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var map, location, marker, geocoder, service, infowindow;
+    var map, location, marker, geocoder, service;
     var restAPIArray = [];
     var restInfoArray = [];
 
@@ -37,7 +37,6 @@ $(document).ready(function () {
         });
 
         map.setCenter(location);
-        service = new google.maps.places.PlacesService(map);
         getRestaurants();
     }
 
@@ -113,14 +112,27 @@ $(document).ready(function () {
         }
     }
 
-    var getRestaurants = function () {
-
+    function getRestaurants() {
         // Use current location (global variable) to determine restaurant list.
         console.log("RL Latitude: " + location.lat());
         console.log("RL Longitude: " + location.lng());
+        service = new google.maps.places.PlacesService(map);
+        nearBySearch()
+        .then(function(results) {
+            return Promise.all(
+                results.map(findDetail)
+            );
+        })
+        .then(function(results) {
+            console.log(results);
+        })
+        .catch(function(status) {
+            alert(status);
+        });
+    }
 
-        infowindow = new google.maps.InfoWindow();
-        service.nearbySearch({
+    function nearBySearch() {
+        var request = {
             location: {
                 lat: location.lat(),
                 lng: location.lng()
@@ -128,27 +140,31 @@ $(document).ready(function () {
             rankBy: google.maps.places.RankBy.DISTANCE,
             type: 'restaurant',
             openNow: true
-        }, callback);
-
-        function callback(results, status) {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-                results.forEach(createRestAPIArr);
-            }
-            console.log('Restaurant API: ', restAPIArray);
-            restInfoArray = new Restaurants(restAPIArray);
-            console.log('Restaurant Info: ', restInfoArray);
-        }
-
-        function createRestAPIArr(place) {
-            var request = {
-                placeId: place.place_id
-            };
-            service.getDetails(request, function (details, status) {
-                if (details !== null) {
-                    restAPIArray.push(details)
+        };
+        return new Promise(function(resolve, reject) {
+            service.nearbySearch(request, function(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    resolve(results);
+                }
+                else {
+                    reject(status);
                 }
             });
-        }
+        });
+    }
+
+    function findDetail(place) {
+        return new Promise(function(resolve, reject) {
+            service.getDetails({placeId: place.place_id}, 
+                               function(place, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    resolve(place);
+                }
+                else {
+                    reject(status);
+                }
+            });
+        });
     }
 
     // $(document).on("click", ".btn-restaurant", populateRestInfo);
