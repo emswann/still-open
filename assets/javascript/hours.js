@@ -6,9 +6,9 @@ function Hours(periodArray, weekdayTextArray) {
       this.open  = {time   : periodObj.open.time,
                     hours  : periodObj.open.hours,
                     minutes: periodObj.open.minutes};
-      // this.close = {time   : periodObj.close.time,
-      //               hours  : periodObj.close.hours,
-      //               minutes: periodObj.close.minutes};
+      this.close = {time   : periodObj.close.time,
+                    hours  : periodObj.close.hours,
+                    minutes: periodObj.close.minutes};
       this.text  = weekdayTextStr
     }
 
