@@ -8,26 +8,22 @@
     <title>Still Open?</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Application specific stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!-- Google Maps JavaScript library -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRVsZ01WM5wp4fnm7Ell1PgzCnYdOVPd4&libraries=places" async
-        defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRVsZ01WM5wp4fnm7Ell1PgzCnYdOVPd4&libraries=places" async defer></script>
 
     <!-- Application specific javascript -->
     <script src="assets/javascript/app.js"></script>
@@ -109,6 +105,9 @@
     <div class="container">
 
         <div class="col-xs-12 col-sm-12 col-md-6" id="list-container">
+            <!-- <div class="row">
+                <button type="button" class="btn btn-default btn-next">NEXT</button>
+            </div> -->
         </div>
         <div class="col-xs-12 col-sm-12 col-md-6" id="map-container">
 
@@ -116,24 +115,27 @@
                 <div id="map"></div>
             </div>
 
-        </div>
-        <div class="row">
-            <button type="button" class="btn btn-default btn-next">NEXT</button>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value=""> 1 Mile
-                </label>
+            <div class="row">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="">
+                        1 Mile
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="" checked>
+                        5 mile
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="">
+                        10 mile
+                    </label>
+                </div>           
             </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="" checked> 5 mile
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value=""> 10 mile
-                </label>
-            </div>
+
         </div>
 
     </div>
