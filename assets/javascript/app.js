@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var map, location, marker, geocoder, service, infowindow;
+    var map, location, marker, geocoder, service, infoWindow;
     var restAPIArray = [];
     var restInfoArray = [];
 
@@ -38,7 +38,7 @@ $(document).ready(function () {
 
         map.setCenter(location);
         service = new google.maps.places.PlacesService(map);
-//        getRestaurants();
+       getRestaurants();
     }
 
     // Removed call to showError in navigator.geolocation.
@@ -132,6 +132,7 @@ $(document).ready(function () {
                 }
             });
         }
+        console.log("here")
     }
 
     // $(document).on("click", ".btn-restaurant", populateRestInfo);
