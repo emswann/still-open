@@ -119,12 +119,15 @@ $(document).ready(function () {
         service = new google.maps.places.PlacesService(map);
         nearBySearch()
         .then(function(results) {
+            var tempArray = results.slice(0, 9);
             return Promise.all(
-                results.map(findDetail)
+                tempArray.map(findDetail)
             );
         })
         .then(function(results) {
             console.log(results);
+            var restaurants = new Restaurants(results);
+            console.log("Info: ", restaurants);
         })
         .catch(function(status) {
             alert(status);
