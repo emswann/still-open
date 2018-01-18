@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    var map, location, marker, geocoder, service, infowindow;
-    var restAPIArray = [];
-    var restInfoArray = [];
+    var map, location, marker, geocoder, service;
+    var searchAPIArray = [];
+    var restInfoArray  = [];
 
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
@@ -37,8 +37,7 @@ $(document).ready(function () {
         });
 
         map.setCenter(location);
-        service = new google.maps.places.PlacesService(map);
-//        getRestaurants();
+        getRestaurants();
     }
 
     // Removed call to showError in navigator.geolocation.
@@ -94,15 +93,44 @@ $(document).ready(function () {
                                : console.log("processAddr: Handle this error.");
     }
 
-    var getRestaurants = function () {
-        const MAX_RADIUS = 2000;
+    async function getRestaurants() {
+        const MAX_QUERY_SIZE = 9;
+
+        var dummyVar = 0;
+        var detailsArray = [];
 
         // Use current location (global variable) to determine restaurant list.
         console.log("RL Latitude: " + location.lat());
         console.log("RL Longitude: " + location.lng());
+        service = new google.maps.places.PlacesService(map);
 
-        infowindow = new google.maps.InfoWindow();
-        service.nearbySearch({
+        searchAPIArray = await nearBySearch();
+        dummyVar = await delayProcess();
+
+        console.log("S: ", searchAPIArray);
+
+        var chunkArray = divideArray(searchAPIArray, MAX_QUERY_SIZE);
+        console.log("Chunk: ", chunkArray);
+
+        for (let i = 0; i < chunkArray.length; i++) {
+            var result = await processSlice(chunkArray[i]);
+            dummyVar = await delayProcess();
+
+            // Do this after the delay.
+            console.log("D-" + i + ": ", result);
+            detailsArray = detailsArray.concat(result);
+        }
+
+        restInfoArray = new Restaurants(detailsArray);
+        console.log("R: ", restInfoArray);
+    }
+
+    function processSlice(array) {
+        return Promise.all(array.map(findDetail));
+    }
+
+    function nearBySearch() {
+        var request = {
             location: {
                 lat: location.lat(),
                 lng: location.lng()
@@ -110,29 +138,33 @@ $(document).ready(function () {
             rankBy: google.maps.places.RankBy.DISTANCE,
             type: 'restaurant',
             openNow: true
-        }, callback);
+        };
 
-        function callback(results, status) {
-            // console.log(results)
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-                results.forEach(createRestAPIArr);
-            }
-            console.log('Restaurant API: ', restAPIArray);
-            // restInfoArray = new Restaurants(restAPIArray);
-            // console.log('Restaurant Info: ', restInfoArray);
-        }
-
-        function createRestAPIArr(place) {
-            var request = {
-                placeId: place.place_id
-            };
-            service.getDetails(request, function (details, status) {
-                if (details !== null) {
-                    restAPIArray.push(details)
+        return new Promise((resolve, reject) => {
+            service.nearbySearch(request, function(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    resolve(results);
+                }
+                else {
+                    reject(status);
                 }
             });
-        }
+        });
     }
+
+    function findDetail(place) {
+        return new Promise((resolve, reject) => {
+            service.getDetails({placeId: place.place_id}, 
+                               function(place, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    resolve(place);
+                }
+                else {
+                    reject(status);
+                }
+            });
+        });
+    }               
 
     // $(document).on("click", ".btn-restaurant", populateRestInfo);
     $("#btn-addr").on("click", processAddr);
