@@ -97,15 +97,16 @@ $(document).ready(function () {
 
     async function getRestaurants() {
         const MAX_QUERY_SIZE = 9;
-
+        const numberOfRadButtons = 3
+        const metersToMiles = [0, 1609.34, 3218.69, 6437.38];
         var dummyVar = 0;
         var detailsArray = [];
 
-        for (var i = 1; i < 4; i++) {
+        for (var i = 1; i <= numberOfRadButtons; i++) {
             var element = $("#radio-button-" + i )
             var meters = [0, 1609.34, 3218.69, 6437.38];
             if (element.prop('checked')) {
-                meterCount = meters[i]
+                meterCount = metersToMiles[i]
             } 
             console.log(meterCount)
         }
