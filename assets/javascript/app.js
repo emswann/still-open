@@ -1,7 +1,6 @@
 $(document).ready(function () {
-    const MAX_RESTAURANTS = 20;
     var map, location, marker, geocoder, service;
-    var detailAPIArray = [];
+    var searchAPIArray = [];
     var restInfoArray  = [];
 
     // Immediately (self) invoked function which initializes application after document is loaded.
@@ -64,18 +63,6 @@ $(document).ready(function () {
         $("#addr-modal").modal("show");
     }
 
-    function convertAddr(addressObj) {
-
-        var addressStr = addressObj.street + "," + 
-                         addressObj.city + "," +
-                         addressObj.state + "," +
-                         addressObj.zipcode;
-
-        // Need to validate address here.
-
-        return addressStr;
-    }
-
     function geocodeAddr(addressStr) {
         var geocoder = new google.maps.Geocoder();
 
@@ -94,23 +81,16 @@ $(document).ready(function () {
     function processAddr() {
         event.preventDefault();
         $("#addr-modal").modal("hide");
-        
-        var addressObj = {
-            "street"  : $("#addr-street").val().trim().toUpperCase(),
-            "city"    : $("#addr-city").val().trim().toUpperCase(),
-            "state"   : $("#addr-state").val().trim().toUpperCase(),
-            "zipcode" : $("#addr-zipcode").val()
-        }
+
+        var addressObj = new Address($("#addr-street").val().trim(),
+                                     $("#addr-city").val().trim(),
+                                     $("#addr-state").val().trim(),
+                                     $("#addr-zipcode").val());
 
         console.log("Input Address: ", addressObj);
-        var addressStr = "";
 
-        if ((addressStr = convertAddr(addressObj)) !== "") {
-            geocodeAddr(addressStr);
-        }
-        else {
-            console.log("processAddr: Handle this error.");
-        }
+        (addressObj.isValid()) ? geocodeAddr(addressObj.address())
+                               : console.log("processAddr: Handle this error.");
     }
 
     async function getRestaurants() {
@@ -121,7 +101,7 @@ $(document).ready(function () {
         console.log("RL Longitude: " + location.lng());
         service = new google.maps.places.PlacesService(map);
 
-        var searchAPIArray = await nearBySearch();
+        searchAPIArray = await nearBySearch();
         dummy = await delayProcess();
 
         console.log("S: ", searchAPIArray);
@@ -172,7 +152,7 @@ $(document).ready(function () {
             openNow: true
         };
 
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             service.nearbySearch(request, function(results, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     resolve(results);
@@ -185,7 +165,7 @@ $(document).ready(function () {
     }
 
     function findDetail(place) {
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             service.getDetails({placeId: place.place_id}, 
                                function(place, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
