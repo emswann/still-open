@@ -1,13 +1,7 @@
 $(document).ready(function () {
-<<<<<<< HEAD
-    var map, location, marker, geocoder, service, infoWindow;
-    var restAPIArray = [];
-    var restInfoArray = [];
-=======
     var map, location, marker, geocoder, service;
     var searchAPIArray = [];
     var restInfoArray  = [];
->>>>>>> 5a3d8cca34965755052a7b943f74b7e2db06126b
 
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
@@ -43,12 +37,7 @@ $(document).ready(function () {
         });
 
         map.setCenter(location);
-<<<<<<< HEAD
-        service = new google.maps.places.PlacesService(map);
-       getRestaurants();
-=======
         getRestaurants();
->>>>>>> 5a3d8cca34965755052a7b943f74b7e2db06126b
     }
 
     // Removed call to showError in navigator.geolocation.
@@ -140,13 +129,8 @@ $(document).ready(function () {
         return Promise.all(array.map(findDetail));
     }
 
-<<<<<<< HEAD
-        infoWindow = new google.maps.InfoWindow();
-        service.nearbySearch({
-=======
     function nearBySearch() {
         var request = {
->>>>>>> 5a3d8cca34965755052a7b943f74b7e2db06126b
             location: {
                 lat: location.lat(),
                 lng: location.lng()
@@ -165,12 +149,7 @@ $(document).ready(function () {
                     reject(status);
                 }
             });
-<<<<<<< HEAD
-        }
-        console.log("here")
-=======
         });
->>>>>>> 5a3d8cca34965755052a7b943f74b7e2db06126b
     }
 
     function findDetail(place) {

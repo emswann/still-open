@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var exampleArr = [];
+    var restaurantArr = [];
     var listCount = 0,
         currentRest = 0,
         container = $("#list-container"),
