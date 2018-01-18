@@ -3,7 +3,7 @@ $(document).ready(function () {
     var searchAPIArray = [];
     var restInfoArray  = [];
     var meterCount
-    var radioFlag = false;
+    $('.radio-button').prop('disabled', true);
 
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
@@ -130,8 +130,8 @@ $(document).ready(function () {
             // Do this after the delay.
             console.log("D-" + i + ": ", result);
             detailsArray = detailsArray.concat(result);
-            radioFlag = true
-            console.log(radioFlag)
+            $('.radio-button').prop('disabled', false);
+
         }
 
         restInfoArray = new Restaurants(detailsArray);
@@ -190,16 +190,11 @@ $(document).ready(function () {
     }               
 
     function changeCheckedRadius () {
-        if (radioFlag) {
         renderMap();
-        radioFlag = false;
-        }
+        $('.radio-button').prop('disabled', true);
     }
-    console.log(radioFlag)
 
     // $(document).on("click", ".btn-restaurant", populateRestInfo);
-    $("#radio-button-1").on("click", changeCheckedRadius);
-    $("#radio-button-2").on("click", changeCheckedRadius);
-    $("#radio-button-3").on("click", changeCheckedRadius);
+    $(".radio-button").on("click", changeCheckedRadius);
     $("#btn-addr").on("click", processAddr);
 });
