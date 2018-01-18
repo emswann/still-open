@@ -94,7 +94,10 @@ $(document).ready(function () {
     }
 
     async function getRestaurants() {
-        var dummy = 0;
+        const MAX_QUERY_SIZE = 9;
+
+        var dummyVar = 0;
+        var detailsArray = [];
 
         // Use current location (global variable) to determine restaurant list.
         console.log("RL Latitude: " + location.lat());
@@ -102,39 +105,24 @@ $(document).ready(function () {
         service = new google.maps.places.PlacesService(map);
 
         searchAPIArray = await nearBySearch();
-        dummy = await delayProcess();
+        dummyVar = await delayProcess();
 
         console.log("S: ", searchAPIArray);
 
-        var tempArray1 = searchAPIArray.slice(0, 9);
-        console.log("T1: ", tempArray1);
+        var chunkArray = divideArray(searchAPIArray, MAX_QUERY_SIZE);
+        console.log("Chunk: ", chunkArray);
 
-        var result1 = await processSlice(tempArray1);
-        dummy = await delayProcess();
+        for (let i = 0; i < chunkArray.length; i++) {
+            var result = await processSlice(chunkArray[i]);
+            dummyVar = await delayProcess();
 
-        console.log("D1: ", result1);
+            // Do this after the delay.
+            console.log("D-" + i + ": ", result);
+            detailsArray = detailsArray.concat(result);
+        }
 
-        var tempArray2 = searchAPIArray.slice(9, 18);
-        console.log("T2: ", tempArray2);
-
-        var result2 = await processSlice(tempArray2);
-        dummy = await delayProcess();
-        
-        console.log("D2: ", result2);
-
-        result1 = result1.concat(result2);
-        console.log(result1);
-
-        restInfoArray = new Restaurants(result1);
-        console.log(restInfoArray);
-    }
-
-    function delayProcess() {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve(1);
-            }, 5000);
-        });
+        restInfoArray = new Restaurants(detailsArray);
+        console.log("R: ", restInfoArray);
     }
 
     function processSlice(array) {
