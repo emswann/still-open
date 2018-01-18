@@ -2,6 +2,7 @@ $(document).ready(function () {
     var map, location, marker, geocoder, service;
     var searchAPIArray = [];
     var restInfoArray  = [];
+    var mileCount
 
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
@@ -99,6 +100,15 @@ $(document).ready(function () {
         var dummyVar = 0;
         var detailsArray = [];
 
+        for (var i = 1; i < 4; i++) {
+            var element = $("#radio-button-" + i )
+            var meters = [0, 1609.34, 3218.69, 6437.38];
+            if (element.attr('checked')) {
+                mileCount = meters[i]
+            } 
+            console.log(mileCount)
+        }
+
         // Use current location (global variable) to determine restaurant list.
         console.log("RL Latitude: " + location.lat());
         console.log("RL Longitude: " + location.lng());
@@ -143,7 +153,16 @@ $(document).ready(function () {
         return new Promise((resolve, reject) => {
             service.nearbySearch(request, function(results, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    resolve(results);
+
+                    function checkRadiusDistance(place, centerLatLng, radius) {
+                        return google.maps.geometry.spherical.computeDistanceBetween(place.geometry.location, centerLatLng) < radius
+                    }
+                    for (var i = 0; i < results.length; i++) {
+                        if (checkRadiusDistance(results[i], location, mileCount)) {
+                            console.log(results[i])
+                            resolve(results);
+                        }
+                    }
                 }
                 else {
                     reject(status);
