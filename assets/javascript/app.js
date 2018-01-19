@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var map, location, marker, geocoder, service;
+    var map, location, marker, geocoder, service, bounds;
     var searchAPIArray = [];
     var restInfoArray  = [];
     var meterCount
@@ -16,6 +16,7 @@ $(document).ready(function () {
 
     function GoogleMap(position) {
         location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        bounds = new google.maps.LatLngBounds();
 
         console.log("GM Latitude: " + location.lat());
         console.log("GM Longitude: " + location.lng());
@@ -25,7 +26,7 @@ $(document).ready(function () {
 
     function renderMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
+            zoom: 60,
             disableDefaultUI: true,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
@@ -38,6 +39,11 @@ $(document).ready(function () {
             icon: "assets/images/bluemarker.png"
         });
 
+        // for (var i = 0; i < marker.length; i++) {
+        bounds.extend(marker.getPosition());
+        // };
+
+        map.fitBounds(bounds);
         map.setCenter(location);
         getRestaurants();
     }
@@ -131,10 +137,10 @@ $(document).ready(function () {
             // Do this after the delay.
             console.log("D-" + i + ": ", result);
             detailsArray = detailsArray.concat(result);
-            $('.radio-button').prop('disabled', false);
 
         }
 
+        $('.radio-button').prop('disabled', false);
         restInfoArray = new Restaurants(detailsArray);
         console.log("R: ", restInfoArray);
     }
