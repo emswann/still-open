@@ -1,9 +1,28 @@
-function Restaurants(apiArray) {
-  this.restaurantArray = (function() {
+function Restaurants(searchAPIArray, detailAPIArray) {
+  this.restaurantArray = (() => {
+
+    var sortArray = (refArray, sortArray) => {
+      sortedArray = [];
+
+      if (refArray.length === sortArray.length) {
+        refArray.forEach(refPlace => {
+          sortArray.forEach(sortPlace => {
+            if (refPlace.place_id === sortPlace.place_id) {
+              sortedArray.push(sortPlace);
+            }
+          })
+        })
+      }
+      else {
+        console.log("sortArray: handle this error");
+      }
+
+      return sortedArray;
+    }
     
     function Restaurant(apiObj) {
 
-      var formatCost = function (costNum) {
+      var formatCost = costNum => {
         var costStr = '';
 
         switch (costNum) {
@@ -25,31 +44,31 @@ function Restaurants(apiArray) {
         return costStr;
       }
 
-      var formatHours = function(periodArray, weekdayTextArray) {
+      var formatHours = (periodArray, weekdayTextArray) => {
         return new Hours(periodArray, weekdayTextArray);
       }
 
       // Assumes always add because validated beforehand.
-      this.addressStr      = apiObj.formatted_address;
-      this.cost            = formatCost(apiObj.price_level);  
-      this.hoursObj        = formatHours(apiObj.opening_hours.periods,
-                                         apiObj.opening_hours.weekday_text);
+      this.place_id        = apiObj.place_id;
       this.locationObj     = apiObj.geometry.location;
       this.nameStr         = apiObj.name;
-      this.phoneStr        = apiObj.formatted_phone_number;
+      this.addressStr      = apiObj.formatted_address;
+      this.phoneStr        = apiObj.formatted_phone_number; 
+      this.hoursObj        = formatHours(apiObj.opening_hours.periods,
+                                         apiObj.opening_hours.weekday_text);
+      this.cost            = formatCost(apiObj.price_level);
       this.websiteStr      = apiObj.website;
     }
 
-    return (function() {
+    return (() => {
       var restaurantArray = [];
 
       /* Need to preserve the sorted order of the array with for vs. forEach. Constructor assumes all objects are added to restaurant array: list has already been scrubbed for null/undefined or permanently closed restaurants. */
-      for (let i = 0; i < apiArray.length; i++) {
-        restaurantArray.push(new Restaurant(apiArray[i]));
-      }
+      detailAPIArray.forEach(place => 
+        restaurantArray.push(new Restaurant(place)));
 
-      // Need to sort by radius.
-      return restaurantArray;
+      /* Need to sort by order of original sort array, since order may have changed due to async processing. */
+      return sortArray(searchAPIArray, restaurantArray);
     })(); 
   })();
 }
