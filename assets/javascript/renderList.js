@@ -4,27 +4,55 @@ function renderList(apiArr) {
         listArr = apiArr.array();
 
     (function createList() {
-        for (let i = 0; i < ITEM_COUNT; i++) {
-            var row = $("<div>");
-            row.addClass("row list");
+        container.empty();
+        if (listArr.length > 10) {
+            for (let i = 0; i < ITEM_COUNT; i++) {
+                var row = $("<div>");
+                row.addClass("row list");
 
-            var rest = $("<div>");
-            rest.addClass("restaurant text-center");
+                var rest = $("<div>");
+                rest.addClass("restaurant text-center");
 
-            var dismiss = $("<button>");
-            dismiss.attr("data-dismiss", i);
-            dismiss.addClass("btn btn-danger dismiss col-md-1");
-            dismiss.append("X");
+                var button = $("<div>");
+                button.addClass("btn btn-default btn-restaurant col-xs-12 col-sm-12 col-md-12");
+                button.attr("type", "button").attr("id", "item-" + i).attr("data-toggle", "modal").attr("data-target", "#info-modal");
+                button.text(listArr[i].nameStr);
 
-            var button = $("<div>");
-            button.addClass("btn btn-default btn-restaurant col-md-11");
-            button.attr("type", "button").attr("id", "item-" + i).attr("data-toggle", "modal").attr("data-target", "#info-modal");
-            button.text(listArr[i].nameStr);
+                rest.append(button);
+                row.append(rest);
+                container.append(row);
+                // createMarkers(i);
+            }
+        } else {
+            for (let i = 0; i < listArr.length; i++) {
+                var row = $("<div>");
+                row.addClass("row list");
 
-            rest.append(dismiss);
-            rest.append(button);
-            row.append(rest);
-            container.append(row);
+                var rest = $("<div>");
+                rest.addClass("restaurant text-center");
+
+
+                var button = $("<div>");
+                button.addClass("btn btn-default btn-restaurant col-xs-12 col-sm-12 col-md-12");
+                button.attr("type", "button").attr("id", "item-" + i).attr("data-toggle", "modal").attr("data-target", "#info-modal");
+                button.text(listArr[i].nameStr);
+                console.log(listArr[i].locationObj.lat)
+                rest.append(button);
+                row.append(rest);
+                container.append(row);
+                // createMarkers(i);
+            }
+        }
+
+        function createMarkers(index) {
+            var restMarker = new google.maps.Marker({
+                position: (listArr[index].locationObj.lat, listArr[index].locationObj.lng),
+                animation: google.maps.Animation.DROP,
+                title: listArr[index].nameStr,
+            });
+
+            restMarker.setMap(map);
         }
     })();
+
 }
