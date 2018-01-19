@@ -1,32 +1,83 @@
 function Hours(periodArray, weekdayTextArray) {
-  this.hoursArray = (function() {
+
+  this.hoursArray = (() => {
     
-    function DayOfWeek(periodObj, weekdayTextStr) {
-      this.day   = periodObj.open.day; // Can pick either open/close. Same value.
-      this.open  = {time   : periodObj.open.time,
-                    hours  : periodObj.open.hours,
-                    minutes: periodObj.open.minutes};
-      this.close = {time   : periodObj.close.time,
-                    hours  : periodObj.close.hours,
-                    minutes: periodObj.close.minutes};
-      this.text  = weekdayTextStr
+    function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
+      var addDefaultElement = function(day) {
+        return {close:     {day: day,
+                            time: "0000",
+                            hours: 0,
+                            minutes: 0},
+                 open:     {day: day,
+                            time: "0000",
+                            hours: 0,
+                            minutes: 0},
+                 isDefault: true};
+      }
+
+      var checkFor24Hrs = function (text) {
+        var regex = new RegExp(/open 24 hours/, 'gi');
+
+        return regex.test(text);
+      }
+
+      var apiIndex = (typeof(periodObj) !== "undefined") 
+                      ? periodObj.close.day 
+                      : 0;
+
+      this.day         = currDayIndex;
+      this.text        = weekdayTextStr;
+      this.isOpen24Hrs = checkFor24Hrs(this.text);
+
+      /* Do this first to determine if default element is required.
+         1) Closed days
+         2) 24 hour restaurants
+         3) Fill end of day of week.
+         NOTE: weekdayTxtStr is always populated for all days of the week either with hours, closed text or open 24 hours text. */
+      ((currDayIndex < apiIndex) 
+        || (typeof(periodObj) === "undefined") 
+        || (this.isOpen24Hrs))
+          ? tmpPeriodObj = addDefaultElement(currDayIndex)
+          : tmpPeriodObj = periodObj;
+
+      this.open        = {time   : tmpPeriodObj.open.time,
+                          hours  : tmpPeriodObj.open.hours,
+                          minutes: tmpPeriodObj.open.minutes};
+      this.close       = {time   : tmpPeriodObj.close.time,
+                          hours  : tmpPeriodObj.close.hours,
+                          minutes: tmpPeriodObj.close.minutes};
+      this.isDefault   = (typeof(tmpPeriodObj.isDefault) === "undefined")
+                          ? false : true; // Set isDefault to true if !undefined.
     }
 
-    return (function() {
+    return (() => {
       const PERIOD_SUNDAY = 0;
-      const WEEKDAY_TEXT_SUNDAY = 6;
+      const PERIOD_TO_WEEKDAY_MAP = [6, 0, 1, 2, 3, 4, 5]; // Array index is the period.
 
       var hoursArray = [];
 
+      var currDayIndex = PERIOD_SUNDAY;
       /* Use periodArray as the driver. 0 = Sunday. 6 = Saturday. weekdayTxtArray starts at 0 = Monday, so need to adjust for values. */
-      for (let i = PERIOD_SUNDAY, j = WEEKDAY_TEXT_SUNDAY; 
-               i < periodArray.length; 
-               i++, j++) {
-        if (j === periodArray.length) {
-          j = 0;
-        }
+      for (let i = PERIOD_SUNDAY; 
+               currDayIndex < PERIOD_TO_WEEKDAY_MAP.length 
+                 && i < periodArray.length; 
+               i++) {
 
-        hoursArray.push(new DayOfWeek(periodArray[i], weekdayTextArray[j]));
+        /* Picking close bc this value is populated at least once even for open 24 hours. Open does not exist for open 24 hours. */  
+        while (currDayIndex <= periodArray[i].close.day) {
+          hoursArray.push(new DayOfWeek(currDayIndex,
+                                        periodArray[i], 
+                                        weekdayTextArray[PERIOD_TO_WEEKDAY_MAP[currDayIndex]]));
+          currDayIndex++;
+        }
+      }
+
+      /* Need to consider case where we run out of periodArray values and still have days of the week we need to process. Process these until end of the week. */
+      while (currDayIndex < PERIOD_TO_WEEKDAY_MAP.length) {
+        hoursArray.push(new DayOfWeek(currDayIndex,
+                                      undefined, 
+                                      weekdayTextArray[PERIOD_TO_WEEKDAY_MAP[currDayIndex]]));
+        currDayIndex++;
       }
 
       // Need to sort by radius.
@@ -35,11 +86,11 @@ function Hours(periodArray, weekdayTextArray) {
   })();
 }
 
-Hours.prototype.array = function() {
+Hours.prototype.array = () => {
   return this.hoursArray;
 }
 
-Hours.prototype.get = function(index) {
+Hours.prototype.get = index => {
   return (index < this.hoursArray.length) 
     ? this.hoursArray[index] 
     : undefined;

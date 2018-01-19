@@ -1,9 +1,9 @@
 function Restaurants(apiArray) {
-  this.restaurantArray = (function() {
+  this.restaurantArray = (() => {
     
     function Restaurant(apiObj) {
 
-      var formatCost = function (costNum) {
+      var formatCost = costNum => {
         var costStr = '';
 
         switch (costNum) {
@@ -25,22 +25,23 @@ function Restaurants(apiArray) {
         return costStr;
       }
 
-      var formatHours = function(periodArray, weekdayTextArray) {
+      var formatHours = (periodArray, weekdayTextArray) => {
         return new Hours(periodArray, weekdayTextArray);
       }
 
       // Assumes always add because validated beforehand.
-      this.addressStr      = apiObj.formatted_address;
-      this.cost            = formatCost(apiObj.price_level);  
-      this.hoursObj        = formatHours(apiObj.opening_hours.periods,
-                                         apiObj.opening_hours.weekday_text);
+      this.place_id        = apiObj.place_id;
       this.locationObj     = apiObj.geometry.location;
       this.nameStr         = apiObj.name;
-      this.phoneStr        = apiObj.formatted_phone_number;
+      this.addressStr      = apiObj.formatted_address;
+      this.phoneStr        = apiObj.formatted_phone_number; 
+      this.hoursObj        = formatHours(apiObj.opening_hours.periods,
+                                         apiObj.opening_hours.weekday_text);
+      this.cost            = formatCost(apiObj.price_level);
       this.websiteStr      = apiObj.website;
     }
 
-    return (function() {
+    return (() => {
       var restaurantArray = [];
 
       /* Need to preserve the sorted order of the array with for vs. forEach. Constructor assumes all objects are added to restaurant array: list has already been scrubbed for null/undefined or permanently closed restaurants. */
@@ -54,17 +55,17 @@ function Restaurants(apiArray) {
   })();
 }
 
-Restaurants.prototype.array = function() {
+Restaurants.prototype.array = () => {
   return this.restaurantArray;
 }
 
-Restaurants.prototype.get = function(index) {
+Restaurants.prototype.get = index => {
   return (index < this.restaurantArray.length) 
     ? this.restaurantArray[index] 
     : undefined;
 }
 
-Restaurants.prototype.delete = function(index) {
+Restaurants.prototype.delete = index => {
   isSuccess = false;
 
   if (index < this.restaurantArray.length) {
