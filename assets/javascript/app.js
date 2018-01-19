@@ -1,7 +1,9 @@
 $(document).ready(function () {
-    var map, location, marker, geocoder, service, infowindow;
-    var infoArray = [];
-    var restInfoArray = [];
+    var map, location, marker, geocoder, service, bounds;
+    var searchAPIArray = [];
+    var restInfoArray  = [];
+    var meterCount
+    $('.radio-button').prop('disabled', true);
 
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
@@ -14,6 +16,7 @@ $(document).ready(function () {
 
     function GoogleMap(position) {
         location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        bounds = new google.maps.LatLngBounds();
 
         console.log("GM Latitude: " + location.lat());
         console.log("GM Longitude: " + location.lng());
@@ -23,7 +26,7 @@ $(document).ready(function () {
 
     function renderMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
+            zoom: 60,
             disableDefaultUI: true,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
@@ -36,9 +39,13 @@ $(document).ready(function () {
             icon: "assets/images/bluemarker.png"
         });
 
+        // for (var i = 0; i < marker.length; i++) {
+        bounds.extend(marker.getPosition());
+        // };
+
+        map.fitBounds(bounds);
         map.setCenter(location);
-        service = new google.maps.places.PlacesService(map);
-        renderRestList();
+        getRestaurants();
     }
 
     // Removed call to showError in navigator.geolocation.
@@ -64,18 +71,6 @@ $(document).ready(function () {
         $("#addr-modal").modal("show");
     }
 
-    function convertAddr(addressObj) {
-
-        var addressStr = addressObj.street + "," + 
-                         addressObj.city + "," +
-                         addressObj.state + "," +
-                         addressObj.zipcode;
-
-        // Need to validate address here.
-
-        return addressStr;
-    }
-
     function geocodeAddr(addressStr) {
         var geocoder = new google.maps.Geocoder();
 
@@ -94,105 +89,119 @@ $(document).ready(function () {
     function processAddr() {
         event.preventDefault();
         $("#addr-modal").modal("hide");
-        
-        var addressObj = {
-            "street"  : $("#addr-street").val().trim().toUpperCase(),
-            "city"    : $("#addr-city").val().trim().toUpperCase(),
-            "state"   : $("#addr-state").val().trim().toUpperCase(),
-            "zipcode" : $("#addr-zipcode").val()
-        }
+
+        var addressObj = new Address($("#addr-street").val().trim(),
+                                     $("#addr-city").val().trim(),
+                                     $("#addr-state").val().trim(),
+                                     $("#addr-zipcode").val());
 
         console.log("Input Address: ", addressObj);
-        var addressStr = "";
 
-        if ((addressStr = convertAddr(addressObj)) !== "") {
-            geocodeAddr(addressStr);
-        }
-        else {
-            console.log("processAddr: Handle this error.");
-        }
+        (addressObj.isValid()) ? geocodeAddr(addressObj.address())
+                               : console.log("processAddr: Handle this error.");
     }
 
-    var renderRestList = function () {
+    async function getRestaurants() {
+        const MAX_QUERY_SIZE = 9;
+        const numberOfRadButtons = 3
+        const metersToMiles = [0, 1609.34, 3218.69, 6437.38];
+        var dummyVar = 0;
+        var detailsArray = [];
+
+        for (var i = 1; i <= numberOfRadButtons; i++) {
+            var element = $("#radio-button-" + i )
+            var meters = [0, 1609.34, 3218.69, 6437.38];
+            if (element.prop('checked')) {
+                meterCount = metersToMiles[i]
+            } 
+            console.log(meterCount)
+        }
 
         // Use current location (global variable) to determine restaurant list.
         console.log("RL Latitude: " + location.lat());
         console.log("RL Longitude: " + location.lng());
+        service = new google.maps.places.PlacesService(map);
 
-        infowindow = new google.maps.InfoWindow();
-        service.nearbySearch({
+        searchAPIArray = await nearBySearch();
+        dummyVar = await delayProcess();
+
+        console.log("S: ", searchAPIArray);
+
+        var chunkArray = divideArray(searchAPIArray, MAX_QUERY_SIZE);
+        console.log("Chunk: ", chunkArray);
+
+        for (let i = 0; i < chunkArray.length; i++) {
+            var result = await processSlice(chunkArray[i]);
+            dummyVar = await delayProcess();
+
+            // Do this after the delay.
+            console.log("D-" + i + ": ", result);
+            detailsArray = detailsArray.concat(result);
+
+        }
+
+        $('.radio-button').prop('disabled', false);
+        restInfoArray = new Restaurants(detailsArray);
+        console.log("R: ", restInfoArray);
+    }
+
+    function processSlice(array) {
+        return Promise.all(array.map(findDetail));
+    }
+
+    function nearBySearch() {
+        var request = {
             location: {
                 lat: location.lat(),
                 lng: location.lng()
             },
-            radius: 2000,
-            type: ['restaurant']
-        }, callback);
+            rankBy: google.maps.places.RankBy.DISTANCE,
+            type: 'restaurant',
+            openNow: true
+        };
 
-        function callback(results, status) {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-                results.forEach(createRestArr);
-            }
-        }
+        return new Promise((resolve, reject) => {
+            var filteredRadiusArray = [];
+            service.nearbySearch(request, function(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
 
-        function createRestArr(place) {
-            var request = {
-                placeId: place.place_id
-            };
-            service.getDetails(request, function (details, status) {
-                if (details !== null) {
-                    infoArray.push(details)
+                    function checkRadiusDistance(place, centerLatLng, radius) {
+                        return google.maps.geometry.spherical.computeDistanceBetween(place.geometry.location, centerLatLng) < radius
+                    }
+                    for (var i = 0; i < results.length; i++) {
+                        if (checkRadiusDistance(results[i], location, meterCount)) {
+                            filteredRadiusArray.push(results[i]);
+                        }
+                    }
+                    resolve(filteredRadiusArray);
                 }
-
-                function costFormat (arg) {
-                    if (arg === 0) {
-                        return 'Free';
-                    }
-                    else if (arg === 1) {
-                        return '$';
-                    }
-                    else if (arg === 2) {
-                        return '$$';
-                    }
-                    else if (arg === 3) {
-                        return '$$$';
-                    }
-                    else if (arg === 4) {
-                        return '$$$$';
-                    } else {
-                        return 'No pricing info'
-                    }
+                else {
+                    reject(status);
                 }
-
-                function openHoursFormat (arg) {
-                    if (arg === true) {
-                        return 'Open';
-                    }
-                    else if (arg === false) {
-                        return 'Closed'
-                    } 
-                    else if (arg === undefined) {
-                        return 'No business data available'
-                    }
-                }
-
-                for (var i = 0; i < infoArray.length; i++) {
-                    var restArray = infoArray[i];
-                    var restObj = {
-                        restName: restArray.name,
-                        restCost: costFormat(restArray.price_level),
-                        restLoc: restArray.formatted_address,
-                        restOpen: openHoursFormat(restArray.opening_hours.open_now),
-                        restHours: restArray.opening_hours.weekday_text,
-                        restURL: restArray.website
-                    }
-                }
-                restInfoArray.push(restObj);
-                console.log(restInfoArray)
             });
-        }
+        });
+    }
+
+    function findDetail(place) {
+        return new Promise((resolve, reject) => {
+            service.getDetails({placeId: place.place_id}, 
+                               function(place, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    resolve(place);
+                }
+                else {
+                    reject(status);
+                }
+            });
+        });
+    }               
+
+    function changeCheckedRadius () {
+        renderMap();
+        $('.radio-button').prop('disabled', true);
     }
 
     // $(document).on("click", ".btn-restaurant", populateRestInfo);
+    $(".radio-button").on("click", changeCheckedRadius);
     $("#btn-addr").on("click", processAddr);
 });
