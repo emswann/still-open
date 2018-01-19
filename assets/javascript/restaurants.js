@@ -55,17 +55,17 @@ function Restaurants(apiArray) {
   })();
 }
 
-Restaurants.prototype.array = () => {
+Restaurants.prototype.array = function() {
   return this.restaurantArray;
 }
 
-Restaurants.prototype.get = index => {
+Restaurants.prototype.get = function(index) {
   return (index < this.restaurantArray.length) 
     ? this.restaurantArray[index] 
     : undefined;
 }
 
-Restaurants.prototype.delete = index => {
+Restaurants.prototype.delete = function(index) {
   isSuccess = false;
 
   if (index < this.restaurantArray.length) {

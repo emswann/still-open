@@ -2,6 +2,16 @@ function Hours(periodArray, weekdayTextArray) {
 
   this.hoursArray = (() => {
     
+    var getDay = periodObj => {
+        var dayNum = 0;
+
+        (typeof(periodObj.close) === "undefined") 
+          ? dayNum = periodObj.open.day 
+          : dayNum = periodObj.close.day;
+
+        return dayNum;
+    }
+    
     function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
       var addDefaultElement = function(day) {
         return {close:     {day: day,
@@ -15,15 +25,17 @@ function Hours(periodArray, weekdayTextArray) {
                  isDefault: true};
       }
 
-      var checkFor24Hrs = function (text) {
+      var checkFor24Hrs = text => {
         var regex = new RegExp(/open 24 hours/, 'gi');
 
         return regex.test(text);
       }
 
-      var apiIndex = (typeof(periodObj) !== "undefined") 
-                      ? periodObj.close.day 
-                      : 0;
+      var apiIndex;
+      
+      (typeof(periodObj) !== "undefined")
+        ? apiIndex = getDay(periodObj)
+        : apiIndex = 0;
 
       this.day         = currDayIndex;
       this.text        = weekdayTextStr;
@@ -63,8 +75,8 @@ function Hours(periodArray, weekdayTextArray) {
                  && i < periodArray.length; 
                i++) {
 
-        /* Picking close bc this value is populated at least once even for open 24 hours. Open does not exist for open 24 hours. */  
-        while (currDayIndex <= periodArray[i].close.day) {
+        var dayNum = getDay(periodArray[i]);  
+        while (currDayIndex <= dayNum) {
           hoursArray.push(new DayOfWeek(currDayIndex,
                                         periodArray[i], 
                                         weekdayTextArray[PERIOD_TO_WEEKDAY_MAP[currDayIndex]]));
@@ -86,11 +98,11 @@ function Hours(periodArray, weekdayTextArray) {
   })();
 }
 
-Hours.prototype.array = () => {
+Hours.prototype.array = function() {
   return this.hoursArray;
 }
 
-Hours.prototype.get = index => {
+Hours.prototype.get = function(index) {
   return (index < this.hoursArray.length) 
     ? this.hoursArray[index] 
     : undefined;
