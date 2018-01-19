@@ -1,7 +1,9 @@
+var createMarkers;
 $(document).ready(function () {
     var map, location, marker, geocoder, service, bounds, restMarkers;
     var searchAPIArray = [];
-    var restInfoArray  = [];
+    var restInfoArray = [];
+    var markerArray = [];
     var meterCount
     $('.radio-button').prop('disabled', true);
 
@@ -27,7 +29,6 @@ $(document).ready(function () {
     function renderMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 100,
-            disableDefaultUI: true,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
 
@@ -39,13 +40,18 @@ $(document).ready(function () {
             icon: "assets/images/bluemarker.png"
         });
 
-        // for (var i = 0; i < marker.length; i++) {
-        // bounds.extend(marker.getPosition());
-        // };
 
-        // map.fitBounds(bounds);
         map.setCenter(location);
         getRestaurants();
+    }
+
+    function centerMap() {
+        for (var i = 0; i < markerArray.length; i++) {
+            bounds.extend(markerArray[i].getPosition());
+        };
+
+        map.fitBounds(bounds);
+        map.setCenter(location);
     }
 
     // Removed call to showError in navigator.geolocation.
@@ -74,13 +80,14 @@ $(document).ready(function () {
     function geocodeAddr(addressStr) {
         var geocoder = new google.maps.Geocoder();
 
-        geocoder.geocode({address: addressStr}, function(results, status) {
+        geocoder.geocode({
+            address: addressStr
+        }, function (results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
                 console.log("GeoCoder: ", results);
                 location = results[0].geometry.location;
                 renderMap();
-            }
-            else {
+            } else {
                 alert('Geocode was not successful for the following reason: ' + status);
             }
         });
@@ -91,14 +98,13 @@ $(document).ready(function () {
         $("#addr-modal").modal("hide");
 
         var addressObj = new Address($("#addr-street").val().trim(),
-                                     $("#addr-city").val().trim(),
-                                     $("#addr-state").val().trim(),
-                                     $("#addr-zipcode").val());
+            $("#addr-city").val().trim(),
+            $("#addr-state").val().trim(),
+            $("#addr-zipcode").val());
 
         console.log("Input Address: ", addressObj);
 
-        (addressObj.isValid()) ? geocodeAddr(addressObj.address())
-                               : console.log("processAddr: Handle this error.");
+        (addressObj.isValid()) ? geocodeAddr(addressObj.address()): console.log("processAddr: Handle this error.");
     }
 
     async function getRestaurants() {
@@ -109,11 +115,11 @@ $(document).ready(function () {
         var detailsArray = [];
 
         for (var i = 1; i <= numberOfRadButtons; i++) {
-            var element = $("#radio-button-" + i )
+            var element = $("#radio-button-" + i)
             var meters = [0, 1609.34, 3218.69, 6437.38];
             if (element.prop('checked')) {
                 meterCount = metersToMiles[i]
-            } 
+            }
             console.log(meterCount)
         }
 
@@ -143,6 +149,7 @@ $(document).ready(function () {
         $('.radio-button').prop('disabled', false);
         restInfoArray = new Restaurants(detailsArray);
         console.log("R: ", restInfoArray);
+        // console.log(restInfoArray[3].locationObj.lat)
         renderList(restInfoArray);
     }
 
@@ -163,7 +170,7 @@ $(document).ready(function () {
 
         return new Promise((resolve, reject) => {
             var filteredRadiusArray = [];
-            service.nearbySearch(request, function(results, status) {
+            service.nearbySearch(request, function (results, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
 
                     function checkRadiusDistance(place, centerLatLng, radius) {
@@ -175,8 +182,7 @@ $(document).ready(function () {
                         }
                     }
                     resolve(filteredRadiusArray);
-                }
-                else {
+                } else {
                     reject(status);
                 }
             });
@@ -185,19 +191,45 @@ $(document).ready(function () {
 
     function findDetail(place) {
         return new Promise((resolve, reject) => {
-            service.getDetails({placeId: place.place_id}, 
-                               function(place, status) {
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    resolve(place);
-                }
-                else {
-                    reject(status);
-                }
-            });
+            service.getDetails({
+                    placeId: place.place_id
+                },
+                function (place, status) {
+                    if (status == google.maps.places.PlacesServiceStatus.OK) {
+                        resolve(place);
+                    } else {
+                        reject(status);
+                    }
+                });
         });
-    }               
+    }
 
-    function changeCheckedRadius () {
+    createMarkers = function (latlng, name, m) {
+        var geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({
+            address: latlng
+        }, function (results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+                console.log("GeoCoder: ", results);
+                markerArray.push(
+                    new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        animation: google.maps.Animation.DROP,
+                        title: name,
+                    }));
+                console.log(markerArray)
+                centerMap();
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+
+
+    function changeCheckedRadius() {
         renderMap();
         $('.radio-button').prop('disabled', true);
     }
