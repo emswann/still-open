@@ -23,7 +23,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!-- Google Maps JavaScript library -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHJqlNREO1QpaDF_ZwGt6M2CedgpZ4L7I&libraries=places" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHJqlNREO1QpaDF_ZwGt6M2CedgpZ4L7I&libraries=places,geometry" async defer></script>
 
     <!-- Application specific javascript -->
     <script src="assets/javascript/utilities.js"></script>
@@ -204,20 +204,20 @@
             <div class="row">
                 <div class="radio">
                     <label>
-                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="">
+                        <input type="radio" name="radius" class = "radio-button" id="radio-button-1" value="">
                         1 Mile
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="" checked>
-                        5 mile
+                        <input type="radio" name="radius" class = "radio-button" id="radio-button-2" value="" checked>
+                        2 mile
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="radius" id="input${1/(\w+)/\u\1/g}" value="">
-                        10 mile
+                        <input type="radio" name="radius" class = "radio-button" id="radio-button-3" value="">
+                        4 mile
                     </label>
                 </div>           
             </div>
