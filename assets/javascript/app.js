@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var map, location, marker, geocoder, service, bounds;
+    var map, location, marker, geocoder, service, bounds, restMarkers;
     var searchAPIArray = [];
     var restInfoArray  = [];
     var meterCount
@@ -8,13 +8,13 @@ $(document).ready(function () {
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(GoogleMap, promptUserAddr);
+            navigator.geolocation.getCurrentPosition(googleMap, promptUserAddr);
         } else {
             promptUserAddr();
         }
     })();
 
-    function GoogleMap(position) {
+    function googleMap(position) {
         location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         bounds = new google.maps.LatLngBounds();
 
@@ -26,7 +26,7 @@ $(document).ready(function () {
 
     function renderMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 60,
+            zoom: 100,
             disableDefaultUI: true,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
@@ -40,10 +40,10 @@ $(document).ready(function () {
         });
 
         // for (var i = 0; i < marker.length; i++) {
-        bounds.extend(marker.getPosition());
+        // bounds.extend(marker.getPosition());
         // };
 
-        map.fitBounds(bounds);
+        // map.fitBounds(bounds);
         map.setCenter(location);
         getRestaurants();
     }
@@ -123,7 +123,7 @@ $(document).ready(function () {
         service = new google.maps.places.PlacesService(map);
 
         searchAPIArray = await nearBySearch();
-        dummyVar = await delayProcess();
+        dummyVar = await delayProcess(1000);
 
         console.log("S: ", searchAPIArray);
 
@@ -132,7 +132,7 @@ $(document).ready(function () {
 
         for (let i = 0; i < chunkArray.length; i++) {
             var result = await processSlice(chunkArray[i]);
-            dummyVar = await delayProcess();
+            dummyVar = await delayProcess(4000);
 
             // Do this after the delay.
             console.log("D-" + i + ": ", result);
@@ -143,6 +143,7 @@ $(document).ready(function () {
         $('.radio-button').prop('disabled', false);
         restInfoArray = new Restaurants(detailsArray);
         console.log("R: ", restInfoArray);
+        renderList(restInfoArray);
     }
 
     function processSlice(array) {
