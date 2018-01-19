@@ -1,5 +1,28 @@
-function Restaurants(apiArray) {
+function Restaurants(searchAPIArray, detailAPIArray) {
   this.restaurantArray = (() => {
+
+    var sortArray = (inputArray, sortArray) => {
+      function match(input1, input2) {
+        
+      }
+      sortedArray = [];
+
+      if (inputArray.length === sortArray.length) {
+        for (let i = 0; i < inputArray.length; i++) {
+          for (let j = 0; j < sortArray.length; j++) {
+            if (inputArray[i].place_id === sortArray[j].place_id) {
+              sortedArray.push(sortArray[j]);
+              break;
+            }
+          }
+        }
+      }
+      else {
+        console.log("sortArray: handle this error");
+      }
+
+      return sortedArray;
+    }
     
     function Restaurant(apiObj) {
 
@@ -45,12 +68,12 @@ function Restaurants(apiArray) {
       var restaurantArray = [];
 
       /* Need to preserve the sorted order of the array with for vs. forEach. Constructor assumes all objects are added to restaurant array: list has already been scrubbed for null/undefined or permanently closed restaurants. */
-      for (let i = 0; i < apiArray.length; i++) {
-        restaurantArray.push(new Restaurant(apiArray[i]));
+      for (let i = 0; i < detailAPIArray.length; i++) {
+        restaurantArray.push(new Restaurant(detailAPIArray[i]));
       }
 
       // Need to sort by radius.
-      return restaurantArray;
+      return sortArray(searchAPIArray, restaurantArray);
     })(); 
   })();
 }

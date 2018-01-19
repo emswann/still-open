@@ -106,7 +106,7 @@ $(document).ready(function () {
         const numberOfRadButtons = 3
         const metersToMiles = [0, 1609.34, 3218.69, 6437.38];
         var dummyVar = 0;
-        var detailsArray = [];
+        var detailAPIArray = [];
 
         for (var i = 1; i <= numberOfRadButtons; i++) {
             var element = $("#radio-button-" + i )
@@ -136,12 +136,12 @@ $(document).ready(function () {
 
             // Do this after the delay.
             console.log("D-" + i + ": ", result);
-            detailsArray = detailsArray.concat(result);
+            detailAPIArray = detailAPIArray.concat(result);
 
         }
 
         $('.radio-button').prop('disabled', false);
-        restInfoArray = new Restaurants(detailsArray);
+        restInfoArray = new Restaurants(searchAPIArray, detailAPIArray);
         console.log("R: ", restInfoArray);
         renderList(restInfoArray);
     }
