@@ -5,9 +5,9 @@ function Hours(periodArray, weekdayTextArray) {
     var getDay = periodObj => {
         var dayNum = 0;
 
-        (typeof(periodObj.close) === "undefined") 
-          ? dayNum = periodObj.open.day 
-          : dayNum = periodObj.close.day;
+        (typeof(periodObj.open) === "undefined") 
+          ? dayNum = periodObj.close.day 
+          : dayNum = periodObj.open.day;
 
         return dayNum;
     }
@@ -92,7 +92,6 @@ function Hours(periodArray, weekdayTextArray) {
         currDayIndex++;
       }
 
-      // Need to sort by radius.
       return hoursArray;
     })(); 
   })();

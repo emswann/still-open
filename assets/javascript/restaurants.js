@@ -67,7 +67,7 @@ function Restaurants(searchAPIArray, detailAPIArray) {
       detailAPIArray.forEach(place => 
         restaurantArray.push(new Restaurant(place)));
 
-      // Need to sort by radius.
+      /* Need to sort by order of original sort array, since order may have changed due to async processing. */
       return sortArray(searchAPIArray, restaurantArray);
     })(); 
   })();
