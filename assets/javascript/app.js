@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var map, location, marker, geocoder, service, bounds;
+    var map, location, marker, geocoder, service, bounds, restMarkers;
     var searchAPIArray = [];
     var restInfoArray  = [];
     var meterCount
@@ -26,7 +26,7 @@ $(document).ready(function () {
 
     function renderMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 60,
+            zoom: 100,
             disableDefaultUI: true,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
@@ -40,10 +40,10 @@ $(document).ready(function () {
         });
 
         // for (var i = 0; i < marker.length; i++) {
-        bounds.extend(marker.getPosition());
+        // bounds.extend(marker.getPosition());
         // };
 
-        map.fitBounds(bounds);
+        // map.fitBounds(bounds);
         map.setCenter(location);
         getRestaurants();
     }
