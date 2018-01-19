@@ -1,8 +1,8 @@
-function delayProcess() {
+function delayProcess(time) {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(1);
-    }, 5000);
+    }, time);
   });
 }
 
