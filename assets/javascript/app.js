@@ -1,7 +1,7 @@
 $(document).ready(function () {
     var map, location, marker, geocoder, service;
-    var searchAPIArray = [];
     var restInfoArray  = [];
+    var searchAPIArray = [];
 
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
@@ -105,7 +105,7 @@ $(document).ready(function () {
         service = new google.maps.places.PlacesService(map);
 
         searchAPIArray = await nearBySearch();
-        dummyVar = await delayProcess();
+        dummyVar = await delayProcess(1000);
 
         console.log("S: ", searchAPIArray);
 
@@ -114,7 +114,7 @@ $(document).ready(function () {
 
         for (let i = 0; i < chunkArray.length; i++) {
             var result = await processSlice(chunkArray[i]);
-            dummyVar = await delayProcess();
+            dummyVar = await delayProcess(4000);
 
             // Do this after the delay.
             console.log("D-" + i + ": ", result);
@@ -123,6 +123,7 @@ $(document).ready(function () {
 
         restInfoArray = new Restaurants(detailsArray);
         console.log("R: ", restInfoArray);
+        renderList(restInfoArray);
     }
 
     function processSlice(array) {

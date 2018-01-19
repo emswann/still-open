@@ -3,13 +3,13 @@ function Hours(periodArray, weekdayTextArray) {
     
     function DayOfWeek(periodObj, weekdayTextStr) {
       this.day   = periodObj.open.day; // Can pick either open/close. Same value.
-      this.open  = {time   : periodObj.open.time,
-                    hours  : periodObj.open.hours,
-                    minutes: periodObj.open.minutes};
-      this.close = {time   : periodObj.close.time,
-                    hours  : periodObj.close.hours,
-                    minutes: periodObj.close.minutes};
-      this.text  = weekdayTextStr
+      // this.open  = {time   : periodObj.open.time,
+      //               hours  : periodObj.open.hours,
+      //               minutes: periodObj.open.minutes};
+      // this.close = {time   : periodObj.close.time,
+      //               hours  : periodObj.close.hours,
+      //               minutes: periodObj.close.minutes};
+      // this.text  = weekdayTextStr
     }
 
     return (function() {
