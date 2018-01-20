@@ -5,11 +5,10 @@ $(document).ready(function () {
     var restInfoArray = [];
     var markerArray = [];
     var meterCount
-    
+    $('.radio-button').prop('disabled', true);
+
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
-        $('.radio-button').prop('disabled', true);
-        $('#radius').hide();
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(googleMap, promptUserAddr);
         } else {
@@ -43,7 +42,6 @@ $(document).ready(function () {
 
 
         map.setCenter(location);
-        $("#radius").show();
         getRestaurants();
     }
 
@@ -88,7 +86,6 @@ $(document).ready(function () {
             if (status === google.maps.GeocoderStatus.OK) {
                 console.log("GeoCoder: ", results);
                 location = results[0].geometry.location;
-                bounds = new google.maps.LatLngBounds();
                 renderMap();
             } else {
                 alert('Geocode was not successful for the following reason: ' + status);
@@ -233,14 +230,16 @@ $(document).ready(function () {
 
 
     function changeCheckedRadius() {
-        renderMap();
+        renderMap(); 
         $('.radio-button').prop('disabled', true);
+    }
+
+    function runRenderModals() {
+        renderModals(restInfoArray, $(this).attr('data-id')); 
     }
 
     $(".radio-button").on("click", changeCheckedRadius);
     $("#btn-addr").on("click", processAddr);
-    $(document).on("click", '[id^=item-]', function (event){
-        renderModals(restInfoArray, event)
-    });
+    $(document).on("click", '[id^=item-]', runRenderModals);
 
 });
