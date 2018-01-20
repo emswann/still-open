@@ -93,3 +93,51 @@ Restaurants.prototype.delete = function(index) {
 
   return {status: isSuccess, element: this.restaurantArray};
 }
+
+Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
+  const INTERVAL = 15;
+  const CLOSE_TEXT_POS = -8;
+
+  var sendAlert    = false;
+  var timeLeft     = 0;
+  var closeTimeStr = "";
+
+  var tmpCurrTime = moment(currTime); // cloning so we do not mutate/change it.
+
+  var hoursInfo  = 
+    this.restaurantArray[index].hoursObj.hoursArray[tmpCurrTime.day()];
+
+  if (!hoursInfo.isOpen24Hrs) {   
+    var closeTime = moment().set({'year':        tmpCurrTime.year(),
+                                  'month':       tmpCurrTime.month(),
+                                  'date':        tmpCurrTime.date(),
+                                  'hour':        hoursInfo.close.hours,
+                                  'minute':      hoursInfo.close.minutes,
+                                  'second':      0,
+                                  'millisecond': 0
+                                })
+
+    if (hoursInfo.close.hours < hoursInfo.open.hours) {
+      closeTime.add(1, 'd');
+    } 
+
+    if (tmpCurrTime.add(timeFrame, 'm').isAfter(closeTime)) {
+      sendAlert = true;
+      timeLeft = 
+        Math.ceil(closeTime.diff(currTime, 'm') / INTERVAL) * INTERVAL;
+    }
+
+    var closeTimeTxt = hoursInfo.text;
+    closeTimeStr = closeTimeTxt.substr(CLOSE_TEXT_POS);
+  }
+  else {
+    // sendAlert is already set to false.
+    closeTimeStr = "Open 24 hours";
+  }
+ 
+  return ({'sendAlert':    sendAlert,
+           'timeLeft':     timeLeft,
+           'closeTimeStr': closeTimeStr,
+           'isOpen24Hrs':  hoursInfo.isOpen24Hrs
+          });
+}
