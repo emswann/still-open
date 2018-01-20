@@ -5,7 +5,7 @@ $(document).ready(function () {
     var restInfoArray = [];
     var markerArray = [];
     var meterCount
-    
+
     // Immediately (self) invoked function which initializes application after document is loaded.
     (function initialize() {
         $('.radio-button').prop('disabled', true);
@@ -230,17 +230,17 @@ $(document).ready(function () {
         });
     }
 
-
-
     function changeCheckedRadius() {
-        renderMap();
+        renderMap(); 
         $('.radio-button').prop('disabled', true);
+    }
+
+    function runRenderModals() {
+        renderModals(restInfoArray, $(this).attr('data-id')); 
     }
 
     $(".radio-button").on("click", changeCheckedRadius);
     $("#btn-addr").on("click", processAddr);
-    $(document).on("click", '[id^=item-]', function (event){
-        renderModals(restInfoArray, event)
-    });
+    $(document).on("click", '[id^=item-]', runRenderModals);
 
 });
