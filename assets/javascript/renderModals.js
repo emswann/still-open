@@ -2,9 +2,6 @@ function renderModals(arr, e) {
 
     var infoArray = arr.restaurantArray;
     var labelId = e
-    // var labelId = $(this).attr('data-id');
-    console.log(e)
-    console.log(infoArray)
 
         for (var i = 0; i < infoArray.length; i++) {
             if (infoArray[i].place_id === labelId) {
