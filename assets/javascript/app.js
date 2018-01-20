@@ -230,18 +230,17 @@ $(document).ready(function () {
         });
     }
 
-
-
-
     function changeCheckedRadius() {
-        renderMap();
+        renderMap(); 
         $('.radio-button').prop('disabled', true);
+    }
+
+    function runRenderModals() {
+        renderModals(restInfoArray, $(this).attr('data-id')); 
     }
 
     $(".radio-button").on("click", changeCheckedRadius);
     $("#btn-addr").on("click", processAddr);
-    $(document).on("click", '[id^=item-]', function (event){
-        renderModals(restInfoArray, event)
-    });
+    $(document).on("click", '[id^=item-]', runRenderModals);
 
 });
