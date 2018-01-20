@@ -97,6 +97,7 @@ Restaurants.prototype.delete = function(index) {
 Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
   const INTERVAL = 15;
   const CLOSE_TEXT_POS = -8;
+  const OPEN_24_HRS_STR = "Open 24 hours";
 
   var sendAlert    = false;
   var timeLeft     = 0;
@@ -117,7 +118,7 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
                                   'millisecond': 0
                                 })
 
-    if (hoursInfo.close.hours < hoursInfo.open.hours) {
+    if (hoursInfo.close.day > hoursInfo.open.day) {
       closeTime.add(1, 'd');
     } 
 
@@ -132,7 +133,7 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
   }
   else {
     // sendAlert is already set to false.
-    closeTimeStr = "Open 24 hours";
+    closeTimeStr = OPEN_24_HRS_STR;
   }
  
   return ({'sendAlert':    sendAlert,
