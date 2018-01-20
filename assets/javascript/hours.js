@@ -31,6 +31,19 @@ function Hours(periodArray, weekdayTextArray) {
         return regex.test(text);
       }
 
+      var checkForCrossover = periodObj => {
+        var isCrossover = false;
+
+        /* Need to check special case of when close day wrap around to 0. */
+        if ((periodObj.close.day > periodObj.open.day) 
+            || ((periodObj.close.day === 0) && (periodObj.open.day === 6))) {
+          isCrossover = true;
+        }
+        // else isCrossover is already initialized to false.
+
+        return isCrossover;
+      }
+
       var refDayIndex;
       
       (typeof(periodObj) !== "undefined")
@@ -59,6 +72,7 @@ function Hours(periodArray, weekdayTextArray) {
                           time   : tmpPeriodObj.close.time,
                           hours  : tmpPeriodObj.close.hours,
                           minutes: tmpPeriodObj.close.minutes};
+      this.isCrossover = checkForCrossover(tmpPeriodObj);
       this.isDefault   = (typeof(tmpPeriodObj.isDefault) === "undefined")
                           ? false : true; // Set isDefault to true if !undefined.
     }

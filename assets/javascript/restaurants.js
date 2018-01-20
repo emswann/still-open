@@ -104,11 +104,20 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
   var closeTimeStr = "";
 
   var tmpCurrTime = moment(currTime); // cloning so we do not mutate/change it.
+  var dayOfWeek   = tmpCurrTime.day();
 
-  var hoursInfo  = 
-    this.restaurantArray[index].hoursObj.hoursArray[tmpCurrTime.day()];
+  var hoursInfo  = this.restaurantArray[index].hoursObj.hoursArray[dayOfWeek];
 
-  if (!hoursInfo.isOpen24Hrs) {   
+  if (!hoursInfo.isOpen24Hrs) { 
+    var openTime  = moment().set({'year':        tmpCurrTime.year(),
+                                  'month':       tmpCurrTime.month(),
+                                  'date':        tmpCurrTime.date(),
+                                  'hour':        hoursInfo.open.hours,
+                                  'minute':      hoursInfo.open.minutes,
+                                  'second':      0,
+                                  'millisecond': 0
+                                })
+
     var closeTime = moment().set({'year':        tmpCurrTime.year(),
                                   'month':       tmpCurrTime.month(),
                                   'date':        tmpCurrTime.date(),
@@ -118,7 +127,7 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
                                   'millisecond': 0
                                 })
 
-    if (hoursInfo.close.day > hoursInfo.open.day) {
+    if (hoursInfo.isCrossover) {
       closeTime.add(1, 'd');
     } 
 
