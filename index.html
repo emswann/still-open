@@ -10,6 +10,10 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100&effect=neon">
+
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet">
+
     <!-- Application specific stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
 
@@ -102,13 +106,13 @@
         </div>
     </div>
 
-    <div class="jumbotron">
+    <div class="header">
         <div class="container">
-            <h1 class="text-center">Still Open?</h1>
+            <h1 class="text-center font-effect-neon" id="title">Still Open?</h1>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" id="main-content">
 
         <div class="col-xs-12 col-sm-12 col-md-6" id="list-container">
             <!-- <div class="row">
@@ -121,7 +125,7 @@
                 <div id="map"></div>
             </div>
 
-            <div class="row">
+            <div class="row text-center" id="radius">
                 <div class="radio">
                     <label>
                         <input type="radio" name="radius" class = "radio-button" id="radio-button-1" value="">

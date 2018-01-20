@@ -1,5 +1,5 @@
 function renderModals(arr, e) {
-
+    console.log(e);
     var infoArray = arr.restaurantArray;
     var labelId = e.toElement.dataset.id;
 
