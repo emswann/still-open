@@ -1,10 +1,10 @@
 function renderModals(arr, e) {
 
     var infoArray = arr.restaurantArray;
-    var labelText = e.target.innerHTML;
+    var labelId = e.toElement.dataset.id;
 
         for (var i = 0; i < infoArray.length; i++) {
-            if (infoArray[i].nameStr === labelText) {
+            if (infoArray[i].place_id === labelId) {
                 $('.modal-body').empty();
                 var modalLine = $('<h3>').text(infoArray[i].nameStr);
                 $('.modal-body').append(modalLine);
@@ -16,7 +16,11 @@ function renderModals(arr, e) {
                 $('.modal-body').append(modalLine);
                 modalLine = $('<h3>').text('URL: ');
                 $('.modal-body').append(modalLine);
-                modalLine = $('<a>').text(infoArray[i].websiteStr);
+                modalLine = $('<a>', {
+                    text: infoArray[i].websiteStr,
+                    href: infoArray[i].websiteStr,
+                    target: "_blank"
+                })
                 $('.modal-body').append(modalLine);
             }
         }

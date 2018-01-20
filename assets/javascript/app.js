@@ -236,7 +236,7 @@ $(document).ready(function () {
 
     $(".radio-button").on("click", changeCheckedRadius);
     $("#btn-addr").on("click", processAddr);
-    $(document).on("click", '[data-toggle="modal"]', function (event){
+    $(document).on("click", '[id^=item-]', function (event){
         renderModals(restInfoArray, event)
     });
 
