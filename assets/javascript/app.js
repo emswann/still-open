@@ -86,6 +86,7 @@ $(document).ready(function () {
             if (status === google.maps.GeocoderStatus.OK) {
                 console.log("GeoCoder: ", results);
                 location = results[0].geometry.location;
+                bounds = new google.maps.LatLngBounds();
                 renderMap();
             } else {
                 alert('Geocode was not successful for the following reason: ' + status);
@@ -234,7 +235,10 @@ $(document).ready(function () {
         $('.radio-button').prop('disabled', true);
     }
 
-    // $(document).on("click", ".btn-restaurant", populateRestInfo);
     $(".radio-button").on("click", changeCheckedRadius);
     $("#btn-addr").on("click", processAddr);
+    $(document).on("click", '[id^=item-]', function (event){
+        renderModals(restInfoArray, event)
+    });
+
 });
