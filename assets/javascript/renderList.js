@@ -4,22 +4,17 @@ function renderList(apiArr) {
     var container = $("#list-container"),
         listArr = apiArr.array();
     var nowMoment = moment();
-
     (function createList() {
         container.empty();
-
         for (let i = 0; i < listArr.length && i < MAX_COUNT; i++) {
-            var {sendAlert, timeLeft, closeTimeStr, isOpen24Hrs} = 
-                apiArr.isClosing(i, nowMoment, TIMEFRAME); 
-
-            var row = $("<div>");
-            row.addClass("row list");
-
+            var {sendAlert, timeLeft, closeTimeStr, isOpen24Hrs} =
+                apiArr.isClosing(i, nowMoment, TIMEFRAME);
+ 
             var rest = $("<div>");
-            rest.addClass("restaurant text-center");
-
+            rest.addClass("row list restaurant");
+ 
             var button = $("<div>");
-            button.addClass("btn btn-default btn-restaurant col-xs-12 col-sm-12 col-md-8");            
+            button.addClass("col-xs-12 col-sm-12 col-md-12 btn btn-default btn-restaurant");            
             button.attr({
                 'type':        'button',
                 'id':          'item-' + i,
@@ -28,33 +23,55 @@ function renderList(apiArr) {
                 'data-index' : i,
                 'data-id'    : listArr[i].place_id
             });
-            button.text(listArr[i].nameStr);
-
+            rest.append(button);
+ 
+            var buttonRow = $("<div>").addClass("row");
+            button.append(buttonRow);
+ 
+            var restInfo = $("<div>")
+            restInfo.addClass("col-xs-12 col-sm-12 col-md-8 rest-info");
+            buttonRow.append(restInfo);
+ 
+            var title = $("<p>");
+            title.text(listArr[i].nameStr);
+            restInfo.append(title);
+ 
             var timeInfo = $("<div>");
-            timeInfo.addClass("time-info col-xs-12 col-sm-12 col-md-4");
-
+            timeInfo.addClass("col-xs-12 col-sm-12 col-md-4 time-info");
+            buttonRow.append(timeInfo);
+ 
             var closeInfo = $("<div>");
-            closeInfo.addClass("row");
-            (isOpen24Hrs) 
-                ? closeInfo.text("Open 24 Hours")
-                : closeInfo.text("Closes at " + closeTimeStr);
-
+            closeInfo.addClass("row close-info");
             timeInfo.append(closeInfo);
-
+ 
+            var closeInfoCol = $("<div>");
+            closeInfoCol.addClass("col-xs-12 col-sm-12 col-md-12");
+            closeInfo.append(closeInfoCol);
+ 
+            var closeInfoTxt = $("<h5>");
+            (isOpen24Hrs)
+                ? closeInfoTxt.text("Open 24 Hours")
+                : closeInfoTxt.text("Closes at " + closeTimeStr);
+            closeInfoCol.append(closeInfoTxt);
+ 
             var alertInfo = $("<div>");
             alertInfo.addClass("row");
-            if (sendAlert) {
-                (timeLeft > 0) 
-                    ? alertInfo.text("Closes in less than " + timeLeft + " mins")
-                    : alertInfo.text("Closing soon!");
-            }
-
             timeInfo.append(alertInfo);
-            
-            rest.append(button).append(timeInfo);
-            row.append(rest);
-            container.append(row);
+ 
+            var alertInfoCol = $("<div>");
+            alertInfoCol.addClass("col-xs-12 col-sm-12 col-md-12");
+            alertInfo.append(alertInfoCol);
+ 
+            if (sendAlert) {
+                var alertInfoTxt = $("<h5>");
+                (timeLeft > 0)
+                    ? alertInfoTxt.text("Closes in less than " + timeLeft + " mins")
+                    : alertInfoTxt.text("Closing soon!");
+                alertInfoCol.append(alertInfoTxt);
+            }
+ 
+            container.append(rest);
             createMarkers(listArr[i].addressStr, listArr[i].nameStr);
         }
     })();
-}
+ }
