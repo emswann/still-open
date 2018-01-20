@@ -234,7 +234,10 @@ $(document).ready(function () {
         $('.radio-button').prop('disabled', true);
     }
 
-    // $(document).on("click", ".btn-restaurant", populateRestInfo);
     $(".radio-button").on("click", changeCheckedRadius);
     $("#btn-addr").on("click", processAddr);
+    $(document).on("click", '[id^=item-]', function (event){
+        renderModals(restInfoArray, event)
+    });
+
 });
