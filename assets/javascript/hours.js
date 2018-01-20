@@ -2,7 +2,7 @@ function Hours(periodArray, weekdayTextArray) {
 
   this.hoursArray = (() => {
     
-    var getDay = periodObj => {
+    var getRefDay = periodObj => {
         var dayNum = 0;
 
         (typeof(periodObj.open) === "undefined") 
@@ -31,13 +31,12 @@ function Hours(periodArray, weekdayTextArray) {
         return regex.test(text);
       }
 
-      var apiIndex;
+      var refDayIndex;
       
       (typeof(periodObj) !== "undefined")
-        ? apiIndex = getDay(periodObj)
-        : apiIndex = 0;
+        ? refDayIndex = getRefDay(periodObj)
+        : refDayIndex = 0;
 
-      this.day         = currDayIndex;
       this.text        = weekdayTextStr;
       this.isOpen24Hrs = checkFor24Hrs(this.text);
 
@@ -46,16 +45,18 @@ function Hours(periodArray, weekdayTextArray) {
          2) 24 hour restaurants
          3) Fill end of day of week.
          NOTE: weekdayTxtStr is always populated for all days of the week either with hours, closed text or open 24 hours text. */
-      ((currDayIndex < apiIndex) 
+      ((currDayIndex < refDayIndex) 
         || (typeof(periodObj) === "undefined") 
         || (this.isOpen24Hrs))
           ? tmpPeriodObj = addDefaultElement(currDayIndex)
           : tmpPeriodObj = periodObj;
 
-      this.open        = {time   : tmpPeriodObj.open.time,
+      this.open        = {day    : tmpPeriodObj.open.day,
+                          time   : tmpPeriodObj.open.time,
                           hours  : tmpPeriodObj.open.hours,
                           minutes: tmpPeriodObj.open.minutes};
-      this.close       = {time   : tmpPeriodObj.close.time,
+      this.close       = {day    : tmpPeriodObj.close.day,
+                          time   : tmpPeriodObj.close.time,
                           hours  : tmpPeriodObj.close.hours,
                           minutes: tmpPeriodObj.close.minutes};
       this.isDefault   = (typeof(tmpPeriodObj.isDefault) === "undefined")
@@ -75,7 +76,7 @@ function Hours(periodArray, weekdayTextArray) {
                  && i < periodArray.length; 
                i++) {
 
-        var dayNum = getDay(periodArray[i]);  
+        var dayNum = getRefDay(periodArray[i]);  
         while (currDayIndex <= dayNum) {
           hoursArray.push(new DayOfWeek(currDayIndex,
                                         periodArray[i], 
