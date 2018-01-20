@@ -86,6 +86,7 @@ $(document).ready(function () {
             if (status === google.maps.GeocoderStatus.OK) {
                 console.log("GeoCoder: ", results);
                 location = results[0].geometry.location;
+                bounds = new google.maps.LatLngBounds();
                 renderMap();
             } else {
                 alert('Geocode was not successful for the following reason: ' + status);
