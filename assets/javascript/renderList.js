@@ -22,7 +22,6 @@ function renderList(apiArr) {
                 row.append(rest);
                 container.append(row);
                 createMarkers(listArr[i].addressStr, listArr[i].nameStr);
-                // createMarkers(i);
             }
         } else {
             for (let i = 0; i < listArr.length; i++) {
