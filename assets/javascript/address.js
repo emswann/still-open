@@ -63,8 +63,8 @@ function Address(streetStr, cityStr, stateStr, zipCodeStr) {
       isValid = false;
     }
 
-    return {isValidState: isValid,
-            errorObj:     errorObj};
+    return {isValid:  isValid,
+            errorObj: errorObj};
   }
 
   this.toProperCase = function(str) {

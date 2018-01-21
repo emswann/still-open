@@ -98,17 +98,20 @@ $(document).ready(function () {
 
     function addAddrError(id, error) {
         $('#' + id).addClass('has-error');
-        $('#' + id).children('input').css({'background-color': 'yellow'}); 
-        $('#' + id)
-            .append($('<h5>').addClass('error-text')
-                             .css({'color':       'red',
-                                   'font-weight': 'bold'})
+        $('#' + id).children('input').addClass('error-input'); 
+        $('#' + id).append($('<h5>').addClass('error-text')
                              .text(error));         
+    }
+
+    function removeAddrError() {
+        $('[id^=form-addr-]').removeClass('has-error');
+        $('[id^=form-addr-]').children('input').removeClass('error-input'); 
+        $(".error-text").detach();
     }
 
     function showAddrError(errorObj, addressObj) {
         var defaultStr = ' is not valid!';
-        
+
         /* Check if all required input is missing first, since it sets the same fields as other state/zip checks. */
         if (!errorObj.hasMinInput 
             || !errorObj.hasCityState 
@@ -138,7 +141,8 @@ $(document).ready(function () {
 
     function processAddr() {
         event.preventDefault();
-        $('[id^=form-addr-]').removeClass("has-error");
+
+        removeAddrError();
 
         var addressObj = new Address($("#addr-street").val().trim(),
             $("#addr-city").val().trim(),

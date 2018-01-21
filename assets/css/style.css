@@ -62,3 +62,11 @@ body {
     display: inline;
 }
 
+.error-input {
+    background-color: yellow;
+}
+.error-text {
+    color: red;
+    font-weight: bold;
+}
+
