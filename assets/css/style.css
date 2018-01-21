@@ -72,6 +72,16 @@ body {
     font-family: 'Ubuntu Condensed', sans-serif;
 }
 
+#addr-modal-label {
+    color: #fff;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+.form-group > label {
+    color: #fff;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
 #info-modal-body {
     color: #3be1ec;
     font-family: 'Ubuntu Condensed', sans-serif;
