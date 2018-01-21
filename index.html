@@ -45,7 +45,7 @@
     <!-- Found in restaurant list divs -->
 
     <!-- Restaurant info modal -->
-    <div class="modal fade" id="info-modal" tabindex="-1" role="dialog" data-backdrop="true" aria-labelledby="info-modal-label">
+    <div class="modal fade" id="info-modal" tabindex="-1" role="dialog" data-backdrop="true" data-keyboard="true" aria-labelledby="info-modal-label">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -67,30 +67,30 @@
     </div>
 
     <!-- Address modal -->
-    <div class="modal fade" id="addr-modal" tabindex="-1" role="dialog" data-backdrop="true" aria-labelledby="addr-modal-label">
+    <div class="modal fade" id="addr-modal" tabindex="-1" role="dialog" data-backdrop="false" data-keyboard="true" aria-labelledby="addr-modal-label">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="addr-modal-label">Cannot resolve location. Please enter address.</h4>
+                    <h4 class="modal-title" id="addr-modal-label">Please enter address to find location.<br>At least city/state or zip code.</h4>
                 </div>
                 <div class="modal-body" id="addr-modal-body">
                     <form>
-                        <div class="form-group">
+                        <div class="form-group" id="form-addr-street">
                             <label for="addr-street">Street address</label>
                             <input type="text" class="form-control" id="addr-street" placeholder="">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="form-addr-city">
                             <label for="addr-city">City</label>
                             <input type="text" class="form-control" id="addr-city" placeholder="">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="form-addr-state">
                             <label for="addr-state">State</label>
                             <input type="text" class="form-control" id="addr-state" placeholder="">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="form-addr-zipcode">
                             <label for="addr-zipcode">Zip Code</label>
                             <input type="number" class="form-control" id="addr-zipcode" placeholder="">
                         </div>
