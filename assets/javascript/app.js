@@ -107,7 +107,7 @@ $(document).ready(function () {
 
         console.log("Input Address: ", addressObj);
 
-        (addressObj.isValid()) ? geocodeAddr(addressObj.address()): console.log("processAddr: Handle this error.");
+        addressObj.isValid ? geocodeAddr(addressObj.address()): console.log("processAddr: Handle this error.");
     }
 
     async function getRestaurants() {
