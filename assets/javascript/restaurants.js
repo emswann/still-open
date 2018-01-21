@@ -139,12 +139,13 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
     /* If user has crossed over, then need to revert to previous day information. */
     if (checkForUserCrossover(currTime, timeObj.openTime)) {
       // Cloning so we do not mutate/change current time.
-      var prevDayOfWeek = moment(currTime).subtract(1, 'd').day(); 
+      var prevTime = moment(currTime).subtract(1, 'd');
+      var prevDayOfWeek = prevTime.day(); 
 
       var prevHoursInfo  = this.restaurantArray[index].hoursObj.hoursArray[prevDayOfWeek];
 
       /* Reload the time data with the previous day information and reset. */
-      timeObj = setTimes(currTime, prevHoursInfo);
+      timeObj = setTimes(prevTime, prevHoursInfo);
     }
     
     /* This will work any time the day is a crossover (user time is in the same day or next day) because we have adjusted to the previous day earlier. NOTE: This step must follow the check for isUserCrossover because we need either the current or previous day data. */
@@ -160,7 +161,7 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
     }
 
     var closeTimeTxt = hoursInfo.text;
-    closeTimeStr = closeTimeTxt.substr(CLOSE_TEXT_POS);
+    closeTimeStr = closeTimeTxt.substr(CLOSE_TEXT_POS).trim();
   }
   else {
     // sendAlert is already set to false.
