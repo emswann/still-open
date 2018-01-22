@@ -122,7 +122,7 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
 
   const INTERVAL = 15;
   const CLOSE_TEXT_POS = -8;
-  const OPEN_24_HRS_STR = "Open 24 hours";
+  const OPEN_24_HRS_STR = 'Open 24 hours';
 
   var sendAlert    = false;
   var timeLeft     = 0;
@@ -134,15 +134,8 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
 
   var hoursInfo  = this.restaurantArray[index].hoursObj.hoursArray[dayOfWeek];
 
-  if (!hoursInfo.isOpen24Hrs) {   
-    var closeTime = moment().set({'year':        tmpCurrTime.year(),
-                                  'month':       tmpCurrTime.month(),
-                                  'date':        tmpCurrTime.date(),
-                                  'hour':        hoursInfo.close.hours,
-                                  'minute':      hoursInfo.close.minutes,
-                                  'second':      0,
-                                  'millisecond': 0
-                                });
+  if (!hoursInfo.isOpen24Hrs) { 
+    timeObj = setTimes(currTime, hoursInfo);
 
     /* If user has crossed over, then need to revert to previous day information. */
     if (checkForUserCrossover(currTime, timeObj.openTime)) {

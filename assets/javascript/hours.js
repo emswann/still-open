@@ -2,7 +2,7 @@ function Hours(periodArray, weekdayTextArray) {
 
   this.hoursArray = (() => {
     
-    var getDay = periodObj => {
+    var getRefDay = periodObj => {
       var dayNum = 0;
 
       (typeof(periodObj.open) === 'undefined') 
@@ -10,71 +10,71 @@ function Hours(periodArray, weekdayTextArray) {
         : dayNum = periodObj.open.day;
 
       return dayNum;
-    }
+  }
     
-    function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
-      var addDefaultElement = function(day) {
-        return {close:     {day: day,
-                            time: '0000',
-                            hours: 0,
-                            minutes: 0},
-                 open:     {day: day,
-                            time: '0000',
-                            hours: 0,
-                            minutes: 0},
-                 isDefault: true};
+  function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
+    var addDefaultElement = function(day) {
+      return {close:    {day:     day,
+                         time:    '0000',
+                         hours:   0,
+                         minutes: 0},
+              open:     {day:     day,
+                         time:    '0000',
+                         hours:   0,
+                         minutes: 0},
+              isDefault: true};
+    }
+
+    var checkFor24Hrs = text => {
+      var regex = new RegExp(/open 24 hours/, 'gi');
+
+      return regex.test(text);
+    }
+
+    var checkForCrossover = periodObj => {
+      var isCrossover = false;
+
+      /* Need to check special case of when close day wrap around to 0. */
+      if ((periodObj.close.day > periodObj.open.day) 
+          || ((periodObj.close.day === 0) && (periodObj.open.day === 6))) {
+        isCrossover = true;
       }
+      // else isCrossover is already initialized to false.
 
-      var checkFor24Hrs = text => {
-        var regex = new RegExp(/open 24 hours/, 'gi');
+      return isCrossover;
+    }
 
-        return regex.test(text);
-      }
-
-      var checkForCrossover = periodObj => {
-        var isCrossover = false;
-
-        /* Need to check special case of when close day wrap around to 0. */
-        if ((periodObj.close.day > periodObj.open.day) 
-            || ((periodObj.close.day === 0) && (periodObj.open.day === 6))) {
-          isCrossover = true;
-        }
-        // else isCrossover is already initialized to false.
-
-        return isCrossover;
-      }
-
-      var refDayIndex;
+    var refDayIndex;
       
-      (typeof(periodObj) !== 'undefined')
-        ? apiIndex = getDay(periodObj)
-        : apiIndex = 0;
+    (typeof(periodObj) !== 'undefined')
+      ? refDayIndex = getRefDay(periodObj)
+      : refDayIndex = 0;
 
-      this.text        = weekdayTextStr;
-      this.isOpen24Hrs = checkFor24Hrs(this.text);
+    this.text        = weekdayTextStr;
+    this.isOpen24Hrs = checkFor24Hrs(this.text);
 
-      /* Do this first to determine if default element is required.
-         1) Closed days
-         2) 24 hour restaurants
-         3) Fill end of day of week.
-         NOTE: weekdayTxtStr is always populated for all days of the week either with hours, closed text or open 24 hours text. */
-      ((currDayIndex < apiIndex) 
+    /* Do this first to determine if default element is required.
+       1) Closed days
+       2) 24 hour restaurants
+       3) Fill end of day of week.
+       NOTE: weekdayTxtStr is always populated for all days of the week either with hours, closed text or open 24 hours text. */
+    ((currDayIndex < refDayIndex) 
         || (typeof(periodObj) === 'undefined') 
         || (this.isOpen24Hrs))
-          ? tmpPeriodObj = addDefaultElement(currDayIndex)
-          : tmpPeriodObj = periodObj;
+      ? tmpPeriodObj = addDefaultElement(currDayIndex)
+      : tmpPeriodObj = periodObj;
 
-      this.open        = {day    : tmpPeriodObj.open.day,
-                          time   : tmpPeriodObj.open.time,
-                          hours  : tmpPeriodObj.open.hours,
-                          minutes: tmpPeriodObj.open.minutes};
-      this.close       = {day    : tmpPeriodObj.close.day,
-                          time   : tmpPeriodObj.close.time,
-                          hours  : tmpPeriodObj.close.hours,
-                          minutes: tmpPeriodObj.close.minutes};
-      this.isDefault   = (typeof(tmpPeriodObj.isDefault) === 'undefined')
-                          ? false 
-                          : true; // Set isDefault to true if !undefined.
+    this.open        = {day    : tmpPeriodObj.open.day,
+                        time   : tmpPeriodObj.open.time,
+                        hours  : tmpPeriodObj.open.hours,
+                        minutes: tmpPeriodObj.open.minutes};
+    this.close       = {day    : tmpPeriodObj.close.day,
+                        time   : tmpPeriodObj.close.time,
+                        hours  : tmpPeriodObj.close.hours,
+                        minutes: tmpPeriodObj.close.minutes};
+    this.isCrossover = checkForCrossover(tmpPeriodObj);
+    this.isDefault   = (typeof(tmpPeriodObj.isDefault) === 'undefined')
+                          ? false : true; // Set isDefault to true if !undefined.
     }
 
     return (() => {
@@ -86,9 +86,9 @@ function Hours(periodArray, weekdayTextArray) {
       var currDayIndex = PERIOD_SUNDAY;
       /* Use periodArray as the driver. 0 = Sunday. 6 = Saturday. weekdayTxtArray starts at 0 = Monday, so need to adjust for values. */
       for (let i = PERIOD_SUNDAY; 
-            currDayIndex < PERIOD_TO_WEEKDAY_MAP.length 
-              && i < periodArray.length; 
-            i++) {
+               currDayIndex < PERIOD_TO_WEEKDAY_MAP.length 
+                 && i < periodArray.length; 
+               i++) {
 
         var dayNum = getRefDay(periodArray[i]);  
         while (currDayIndex <= dayNum) {
