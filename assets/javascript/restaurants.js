@@ -14,7 +14,7 @@ function Restaurants(searchAPIArray, detailAPIArray) {
         })
       }
       else {
-        console.log("sortArray: handle this error");
+        console.log('sortArray: handle this error');
       }
 
       return sortedArray;
@@ -65,7 +65,8 @@ function Restaurants(searchAPIArray, detailAPIArray) {
 
       /* Need to preserve the sorted order of the array with for vs. forEach. Constructor assumes all objects are added to restaurant array: list has already been scrubbed for null/undefined or permanently closed restaurants. */
       detailAPIArray.forEach(place => 
-        restaurantArray.push(new Restaurant(place)));
+        restaurantArray.push(new Restaurant(place))
+      );
 
       /* Need to sort by order of original sort array, since order may have changed due to async processing. */
       return sortArray(searchAPIArray, restaurantArray);
@@ -100,7 +101,7 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
 
   var sendAlert    = false;
   var timeLeft     = 0;
-  var closeTimeStr = "";
+  var closeTimeStr = '';
 
   var tmpCurrTime = moment(currTime); // cloning so we do not mutate/change it.
 
@@ -115,7 +116,7 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
                                   'minute':      hoursInfo.close.minutes,
                                   'second':      0,
                                   'millisecond': 0
-                                })
+                                });
 
     if (hoursInfo.close.hours < hoursInfo.open.hours) {
       closeTime.add(1, 'd');
@@ -132,7 +133,7 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
   }
   else {
     // sendAlert is already set to false.
-    closeTimeStr = "Open 24 hours";
+    closeTimeStr = 'Open 24 hours';
   }
  
   return ({'sendAlert':    sendAlert,

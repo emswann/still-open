@@ -3,23 +3,23 @@ function Hours(periodArray, weekdayTextArray) {
   this.hoursArray = (() => {
     
     var getDay = periodObj => {
-        var dayNum = 0;
+      var dayNum = 0;
 
-        (typeof(periodObj.open) === "undefined") 
-          ? dayNum = periodObj.close.day 
-          : dayNum = periodObj.open.day;
+      (typeof(periodObj.open) === 'undefined') 
+        ? dayNum = periodObj.close.day 
+        : dayNum = periodObj.open.day;
 
-        return dayNum;
+      return dayNum;
     }
     
     function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
       var addDefaultElement = function(day) {
         return {close:     {day: day,
-                            time: "0000",
+                            time: '0000',
                             hours: 0,
                             minutes: 0},
                  open:     {day: day,
-                            time: "0000",
+                            time: '0000',
                             hours: 0,
                             minutes: 0},
                  isDefault: true};
@@ -33,7 +33,7 @@ function Hours(periodArray, weekdayTextArray) {
 
       var apiIndex;
       
-      (typeof(periodObj) !== "undefined")
+      (typeof(periodObj) !== 'undefined')
         ? apiIndex = getDay(periodObj)
         : apiIndex = 0;
 
@@ -47,7 +47,7 @@ function Hours(periodArray, weekdayTextArray) {
          3) Fill end of day of week.
          NOTE: weekdayTxtStr is always populated for all days of the week either with hours, closed text or open 24 hours text. */
       ((currDayIndex < apiIndex) 
-        || (typeof(periodObj) === "undefined") 
+        || (typeof(periodObj) === 'undefined') 
         || (this.isOpen24Hrs))
           ? tmpPeriodObj = addDefaultElement(currDayIndex)
           : tmpPeriodObj = periodObj;
@@ -58,8 +58,9 @@ function Hours(periodArray, weekdayTextArray) {
       this.close       = {time   : tmpPeriodObj.close.time,
                           hours  : tmpPeriodObj.close.hours,
                           minutes: tmpPeriodObj.close.minutes};
-      this.isDefault   = (typeof(tmpPeriodObj.isDefault) === "undefined")
-                          ? false : true; // Set isDefault to true if !undefined.
+      this.isDefault   = (typeof(tmpPeriodObj.isDefault) === 'undefined')
+                          ? false 
+                          : true; // Set isDefault to true if !undefined.
     }
 
     return (() => {
@@ -71,9 +72,9 @@ function Hours(periodArray, weekdayTextArray) {
       var currDayIndex = PERIOD_SUNDAY;
       /* Use periodArray as the driver. 0 = Sunday. 6 = Saturday. weekdayTxtArray starts at 0 = Monday, so need to adjust for values. */
       for (let i = PERIOD_SUNDAY; 
-               currDayIndex < PERIOD_TO_WEEKDAY_MAP.length 
-                 && i < periodArray.length; 
-               i++) {
+            currDayIndex < PERIOD_TO_WEEKDAY_MAP.length 
+              && i < periodArray.length; 
+            i++) {
 
         var dayNum = getDay(periodArray[i]);  
         while (currDayIndex <= dayNum) {

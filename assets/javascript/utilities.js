@@ -9,7 +9,7 @@ function delayProcess(time) {
 function divideArray(array, size) {
   var tmpArray = [];
     
-  for (i= 0; i < array.length; i += size) {
+  for (let i= 0; i < array.length; i += size) {
     var chunk = array.slice(i, i+size);
 
     tmpArray.push(chunk);
