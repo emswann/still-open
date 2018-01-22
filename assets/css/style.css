@@ -67,12 +67,12 @@ body {
 
 }
 
-#info-modal-label {
+#info-modal-title {
     color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
 }
 
-#addr-modal-label {
+#addr-modal-title {
     color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
 }

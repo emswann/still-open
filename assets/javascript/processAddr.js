@@ -51,6 +51,7 @@ function processAddr() {
     geocodeAddr(addressObj.address()); 
   }
   else {
+    $('#addr-modal-title').text('Input errors found. Fix and re-submit')
     showAddrError(errorObj, addressObj);
   }
 }

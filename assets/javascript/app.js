@@ -64,6 +64,7 @@ $(document).ready(function () {
 
   geocodeAddr = function (addressStr) {
     var geocoder = new google.maps.Geocoder();
+    var appError;
 
     geocoder.geocode({
       address: addressStr
@@ -75,7 +76,7 @@ $(document).ready(function () {
         renderMap();
       } 
       else {
-        alert('Geocode was not successful for the following reason: ' + status);
+        console.log(status);
       }
     });
   }
@@ -197,7 +198,7 @@ $(document).ready(function () {
           centerMap();
         } 
         else {
-          alert('Geocode was not successful for the following reason: ' + status);
+          throw(status);
         }
       });
   }
@@ -208,8 +209,13 @@ $(document).ready(function () {
   }
 
   function processAddrModal() {
-    event.preventDefault();
-    processAddr();
+    try {
+      event.preventDefault();
+      processAddr();      
+    }
+    catch(error) {
+      console.log(error);
+    }
   }
 
   function runRestModal() {
