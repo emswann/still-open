@@ -96,17 +96,43 @@ Restaurants.prototype.delete = function(index) {
 }
 
 Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
+  var checkForUserCrossover = (currTime, openTime) => {
+    return (currTime.isBefore(openTime)) ? true : false;
+  }
+
+  var setTimes = (currTime, hoursInfo) => {
+    return ({openTime:  moment().set({'year':        currTime.year(),
+                                      'month':       currTime.month(),
+                                      'date':        currTime.date(),
+                                      'hour':        hoursInfo.open.hours,
+                                      'minute':      hoursInfo.open.minutes,
+                                      'second':      0,
+                                      'millisecond': 0
+                                     }),
+             closeTime: moment().set({'year':        currTime.year(),
+                                      'month':       currTime.month(),
+                                      'date':        currTime.date(),
+                                      'hour':        hoursInfo.close.hours,
+                                      'minute':      hoursInfo.close.minutes,
+                                      'second':      0,
+                                      'millisecond': 0
+                                     })
+    });
+  }
+
   const INTERVAL = 15;
   const CLOSE_TEXT_POS = -8;
+  const OPEN_24_HRS_STR = "Open 24 hours";
 
   var sendAlert    = false;
   var timeLeft     = 0;
   var closeTimeStr = '';
 
-  var tmpCurrTime = moment(currTime); // cloning so we do not mutate/change it.
+  var timeObj;
 
-  var hoursInfo  = 
-    this.restaurantArray[index].hoursObj.hoursArray[tmpCurrTime.day()];
+  var dayOfWeek   = currTime.day();
+
+  var hoursInfo  = this.restaurantArray[index].hoursObj.hoursArray[dayOfWeek];
 
   if (!hoursInfo.isOpen24Hrs) {   
     var closeTime = moment().set({'year':        tmpCurrTime.year(),
@@ -118,22 +144,36 @@ Restaurants.prototype.isClosing = function (index, currTime, timeFrame) {
                                   'millisecond': 0
                                 });
 
-    if (hoursInfo.close.hours < hoursInfo.open.hours) {
-      closeTime.add(1, 'd');
-    } 
+    /* If user has crossed over, then need to revert to previous day information. */
+    if (checkForUserCrossover(currTime, timeObj.openTime)) {
+      // Cloning so we do not mutate/change current time.
+      var prevTime = moment(currTime).subtract(1, 'd');
+      var prevDayOfWeek = prevTime.day(); 
 
-    if (tmpCurrTime.add(timeFrame, 'm').isAfter(closeTime)) {
+      var prevHoursInfo  = this.restaurantArray[index].hoursObj.hoursArray[prevDayOfWeek];
+
+      /* Reload the time data with the previous day information and reset. */
+      timeObj = setTimes(prevTime, prevHoursInfo);
+    }
+    
+    /* This will work any time the day is a crossover (user time is in the same day or next day) because we have adjusted to the previous day earlier. NOTE: This step must follow the check for isUserCrossover because we need either the current or previous day data. */
+    if (hoursInfo.isCrossover) {
+      timeObj.closeTime.add(1, 'd');
+    }
+
+    // Cloning so we do not mutate/change current time.
+    if (moment(currTime).add(timeFrame, 'm').isAfter(timeObj.closeTime)) {
       sendAlert = true;
       timeLeft = 
-        Math.ceil(closeTime.diff(currTime, 'm') / INTERVAL) * INTERVAL;
+        Math.ceil(timeObj.closeTime.diff(currTime, 'm') / INTERVAL) * INTERVAL;
     }
 
     var closeTimeTxt = hoursInfo.text;
-    closeTimeStr = closeTimeTxt.substr(CLOSE_TEXT_POS);
+    closeTimeStr = closeTimeTxt.substr(CLOSE_TEXT_POS).trim();
   }
   else {
     // sendAlert is already set to false.
-    closeTimeStr = 'Open 24 hours';
+    closeTimeStr = OPEN_24_HRS_STR;
   }
  
   return ({'sendAlert':    sendAlert,

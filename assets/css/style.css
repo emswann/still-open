@@ -62,11 +62,54 @@ body {
     display: inline;
 }
 
+.modal-content {
+    background: #001a65;
+
+}
+
+#info-modal-label {
+    color: #fff;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+#addr-modal-label {
+    color: #fff;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+.form-group > label {
+    color: #fff;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+#info-modal-body {
+    color: #3be1ec;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+#info-modal-body > a{
+    color: #fff;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+#info-modal-body > a:hover{
+    color: #f0f;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+.modal-header {
+    border-bottom: 2px solid #f0f;
+}
+
+.modal-footer {
+    border-top: 2px solid #f0f;
+}
+
 .error-input {
     background-color: yellow;
 }
+
 .error-text {
     color: red;
     font-weight: bold;
 }
-

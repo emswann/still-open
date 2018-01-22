@@ -31,13 +31,25 @@ function Hours(periodArray, weekdayTextArray) {
         return regex.test(text);
       }
 
-      var apiIndex;
+      var checkForCrossover = periodObj => {
+        var isCrossover = false;
+
+        /* Need to check special case of when close day wrap around to 0. */
+        if ((periodObj.close.day > periodObj.open.day) 
+            || ((periodObj.close.day === 0) && (periodObj.open.day === 6))) {
+          isCrossover = true;
+        }
+        // else isCrossover is already initialized to false.
+
+        return isCrossover;
+      }
+
+      var refDayIndex;
       
       (typeof(periodObj) !== 'undefined')
         ? apiIndex = getDay(periodObj)
         : apiIndex = 0;
 
-      this.day         = currDayIndex;
       this.text        = weekdayTextStr;
       this.isOpen24Hrs = checkFor24Hrs(this.text);
 
@@ -52,10 +64,12 @@ function Hours(periodArray, weekdayTextArray) {
           ? tmpPeriodObj = addDefaultElement(currDayIndex)
           : tmpPeriodObj = periodObj;
 
-      this.open        = {time   : tmpPeriodObj.open.time,
+      this.open        = {day    : tmpPeriodObj.open.day,
+                          time   : tmpPeriodObj.open.time,
                           hours  : tmpPeriodObj.open.hours,
                           minutes: tmpPeriodObj.open.minutes};
-      this.close       = {time   : tmpPeriodObj.close.time,
+      this.close       = {day    : tmpPeriodObj.close.day,
+                          time   : tmpPeriodObj.close.time,
                           hours  : tmpPeriodObj.close.hours,
                           minutes: tmpPeriodObj.close.minutes};
       this.isDefault   = (typeof(tmpPeriodObj.isDefault) === 'undefined')
@@ -76,7 +90,7 @@ function Hours(periodArray, weekdayTextArray) {
               && i < periodArray.length; 
             i++) {
 
-        var dayNum = getDay(periodArray[i]);  
+        var dayNum = getRefDay(periodArray[i]);  
         while (currDayIndex <= dayNum) {
           hoursArray.push(new DayOfWeek(currDayIndex,
                                         periodArray[i], 
