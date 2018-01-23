@@ -113,3 +113,13 @@ body {
     color: red;
     font-weight: bold;
 }
+
+#err-modal-body {
+    color: #3be1ec;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+#err-modal-title {
+    color: #fff;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}

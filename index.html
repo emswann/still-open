@@ -38,6 +38,7 @@
     <script src="assets/javascript/renderList.js"></script>
     <script src="assets/javascript/renderRestModal.js"></script>
     <script src="assets/javascript/processAddr.js"></script>
+    <script src="assets/javascript/errorHandler.js"></script>
 
 </head>
 
@@ -101,6 +102,28 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="err-modal" tabindex="-1" role="dialog" data-backdrop="true" data-keyboard="true" aria-labelledby="err-modal-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="err-modal-title">Error!</h4>
+                </div>
+                <div class="modal-body" id="err-modal-body">
+                    <!-- Divs are dynamically created by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="reset-btn">
+                        Refresh App
                     </button>
                 </div>
             </div>
