@@ -2,7 +2,7 @@ var createMarkers;
 var geocodeAddr;
 
 $(document).ready(function () {
-  var map, location, marker, geocoder, service, bounds, restMarkers;
+  var map, location, marker, geocoder, service, bounds, restMarkers, oms;
   var searchAPIArray = [];
   var restInfoArray = [];
   var markerArray = [];
@@ -49,6 +49,11 @@ $(document).ready(function () {
     });
 
     map.setCenter(location);
+    oms = new OverlappingMarkerSpiderfier(map, {
+      markersWontMove: true,
+      markersWontHide: true,
+      basicFormatEvents: true
+    });
     $('#radius').show();
     getRestaurants();
   }
@@ -212,6 +217,11 @@ $(document).ready(function () {
             animation: google.maps.Animation.DROP,
             title: name,
           }));
+          for (var i = 0; i < markerArray.length; i++) {
+            var element = markerArray[i];
+            oms.addMarker(element)
+          }
+          
         console.log(markerArray)
         centerMap();
       } 
