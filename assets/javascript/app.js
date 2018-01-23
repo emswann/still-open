@@ -231,12 +231,17 @@ $(document).ready(function () {
     processAddr();
   }
 
+  function reloadPage() {
+    window.location.reload(true);
+  }
+
   function runRestModal() {
     renderRestModal(restInfoArray, $(this).attr('data-id')); 
   }
 
   $('.radio-button').on('click', changeCheckedRadius);
   $('#btn-addr').on('click', processAddrModal);
+  $('#reset-btn').on('click', reloadPage);
   $(document).on('click', '[id^=item-]', runRestModal);
 });
 
