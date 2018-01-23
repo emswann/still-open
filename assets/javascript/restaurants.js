@@ -14,7 +14,8 @@ function Restaurants(searchAPIArray, detailAPIArray) {
         })
       }
       else {
-        console.log('sortArray: handle this error');
+        sortedArray = sortArray;
+        console.log('Restaurants: API search array does not match length of details array...bypassing sorting.');
       }
 
       return sortedArray;
@@ -57,7 +58,9 @@ function Restaurants(searchAPIArray, detailAPIArray) {
       this.hoursObj        = formatHours(apiObj.opening_hours.periods,
                                          apiObj.opening_hours.weekday_text);
       this.cost            = formatCost(apiObj.price_level);
-      this.websiteStr      = apiObj.website;
+      this.websiteStr      = apiObj.website 
+                             ? apiObj.website 
+                             : 'No website info';
     }
 
     return (() => {
