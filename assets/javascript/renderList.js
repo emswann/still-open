@@ -58,7 +58,7 @@ function renderList(apiArr) {
           .addClass('col-xs-12 col-sm-12 col-md-12');
         closeInfo.append(closeInfoCol);
  
-        var closeInfoTxt = $('<h5>');
+        var closeInfoTxt = $('<h5>')
         textStr = (isOpen24Hrs) ? 'Open 24 Hours' : 'Closes at ' + closeTimeStr;
         closeInfoTxt.text(textStr);
         closeInfoCol.append(closeInfoTxt);
@@ -72,7 +72,8 @@ function renderList(apiArr) {
         alertInfo.append(alertInfoCol);
  
         if (sendAlert) {
-          var alertInfoTxt = $('<h5>');
+          var alertInfoTxt = $('<h5>')
+            .addClass('alert-info');
           textStr = (timeLeft > 0)
             ? ('Closes in less than ' + timeLeft + ' mins')
             : ('Closing soon!');

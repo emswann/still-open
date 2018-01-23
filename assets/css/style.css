@@ -3,11 +3,15 @@
 }
 
 body {
-    background: #44133F;
-    
+    background: url("../images/skyline.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
 }
 
-.header  {
+.header {
     font-family: Lato;
     background: #111;
     text-align: center;
@@ -23,16 +27,29 @@ body {
     margin: 20px auto;
 }
 
+#list-container {
+    height: 600px;
+}
+
 .list {
-    margin-right: 5px;
+    margin: 0;
 }
 
 .btn-restaurant {
     margin-bottom: 5px;
     background: #001a65;
-    /* border: none; */
-    /* border: 2px solid #3be1ec; */
-    
+    animation: slide-up 0.5s ease;
+}
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .btn-restaurant:hover {
@@ -42,10 +59,9 @@ body {
 
 .btn-restaurant p {
     font-size: 1.5em;
-    color: #3be1ec;
+    color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
-    /* text-shadow: 1px 1px 3px #fff; */
-
+    text-shadow: 0 0 3px #3be1ec;
 }
 
 .time-info .close-info {
@@ -54,17 +70,43 @@ body {
     text-shadow: 1px 1px 3px #f0f;
 }
 
+.time-info .alert-info {
+    color: red;
+    font-family: 'Ubuntu Condensed', sans-serif;
+    text-shadow: 1px 1px 3px #f0f;
+    background: none;
+    border: none;
+}
+
+#map-container {
+    height: 600px;
+}
+
 #map {
-    height: 500px;
+    height: 550px;
+}
+
+#radius {
+    margin-top: 10px;
+    animation: slide-up 0.4s ease;
 }
 
 .radio {
     display: inline;
+    margin: 0 5px;
+    background: #001a65;
+    font-family: 'Ubuntu Condensed', sans-serif;
+    color: #3be1ec;
+}
+
+.radio:hover {
+    background: #001a65;
+    color: #3be1ec;
+    box-shadow: 0px 0px 10px #f0f, 0px 0px 10px #f0f;
 }
 
 .modal-content {
     background: #001a65;
-
 }
 
 #info-modal-title {
@@ -77,7 +119,7 @@ body {
     font-family: 'Ubuntu Condensed', sans-serif;
 }
 
-.form-group > label {
+.form-group>label {
     color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
 }
@@ -85,16 +127,36 @@ body {
 #info-modal-body {
     color: #3be1ec;
     font-family: 'Ubuntu Condensed', sans-serif;
+    word-wrap: break-word;
 }
 
-#info-modal-body > a{
+#info-modal-body>a {
+    text-decoration: none;
     color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
 }
 
-#info-modal-body > a:hover{
+#info-modal-body>a:hover {
     color: #f0f;
     font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+#info-modal-body #rest-name {
+    color: #fff;
+    text-decoration: underline;
+    text-shadow: 0 0 3px #3be1ec;
+}
+
+#info-modal-body #address {
+    color: #fff;
+}
+
+#info-modal-body #cost {
+    color: #fff;
+}
+
+#info-modal-body #phone {
+    color: #fff;
 }
 
 .modal-header {
