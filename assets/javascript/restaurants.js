@@ -14,7 +14,8 @@ function Restaurants(searchAPIArray, detailAPIArray) {
         })
       }
       else {
-        console.log('sortArray: handle this error');
+        sortedArray = sortArray;
+        console.log('Restaurants: API search array does not match length of details array...bypassing sorting.');
       }
 
       return sortedArray;

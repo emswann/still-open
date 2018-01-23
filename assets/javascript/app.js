@@ -64,6 +64,7 @@ $(document).ready(function () {
 
   geocodeAddr = function (addressStr) {
     var geocoder = new google.maps.Geocoder();
+    var appError;
 
     geocoder.geocode({
       address: addressStr
@@ -75,7 +76,7 @@ $(document).ready(function () {
         renderMap();
       } 
       else {
-        alert('Geocode was not successful for the following reason: ' + status);
+        processError(status);
       }
     });
   }
@@ -101,17 +102,35 @@ $(document).ready(function () {
     console.log('RL Longitude: ' + location.lng());
     service = new google.maps.places.PlacesService(map);
 
-    searchAPIArray = await nearBySearch();
-    dummyVar = await delayProcess(1000);
-
+    try {
+      searchAPIArray = await nearBySearch();
+      dummyVar = await delayProcess(1000);
+    }
+    catch(error) {
+      processError(error);
+    }
     console.log('S: ', searchAPIArray);
 
     var chunkArray = divideArray(searchAPIArray, MAX_QUERY_SIZE);
     console.log('Chunk: ', chunkArray);
 
+    var result;
     for (let i = 0; i < chunkArray.length; i++) {
-      var result = await processSlice(chunkArray[i]);
-      dummyVar = await delayProcess(4000);
+      try {
+        result = await processSlice(chunkArray[i]);
+        dummyVar = await delayProcess(4000);
+      }
+      catch (error) {
+        /* Wait and try one more time. Then forget about it. Go ahead and fail. */
+        try {
+          dummyVar = await delayProcess(4000);
+          result = await processSlice(chunkArray[i]);
+          dummyVar = await delayProcess(4000);
+        }
+        catch (error) {
+          processError(error);
+        }
+      }
 
       // Do this after the delay.
       console.log('D-' + i + ': ', result);
@@ -142,23 +161,23 @@ $(document).ready(function () {
 
     return new Promise((resolve, reject) => {
       var filteredRadiusArray = [];
-        service.nearbySearch(request, function (results, status) {
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
+      service.nearbySearch(request, function (results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
 
-            function checkRadiusDistance(place, centerLatLng, radius) {
-              return google.maps.geometry.spherical.computeDistanceBetween(place.geometry.location, centerLatLng) < radius
-            }
-            for (var i = 0; i < results.length; i++) {
-              if (checkRadiusDistance(results[i], location, meterCount)) {
-                filteredRadiusArray.push(results[i]);
-              }
-            }
-            resolve(filteredRadiusArray);
-          } 
-          else {
-            reject(status);
+          function checkRadiusDistance(place, centerLatLng, radius) {
+            return google.maps.geometry.spherical.computeDistanceBetween(place.geometry.location, centerLatLng) < radius
           }
-        });
+          for (var i = 0; i < results.length; i++) {
+            if (checkRadiusDistance(results[i], location, meterCount)) {
+              filteredRadiusArray.push(results[i]);
+            }
+          }
+          resolve(filteredRadiusArray);
+        } 
+        else {
+          reject(status);
+        }
+      });
     });
   }
 
@@ -168,7 +187,7 @@ $(document).ready(function () {
         placeId: place.place_id
       },
       function (place, status) {
-        if (status == google.maps.places.PlacesServiceStatus.OK) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
           resolve(place);
         } 
         else {
@@ -178,28 +197,28 @@ $(document).ready(function () {
     });
   }
 
-  createMarkers = function (latlng, name, m) {
+  createMarkers = function (latlng, name) {
     var geocoder = new google.maps.Geocoder();
 
     geocoder.geocode({
       address: latlng
     }, function (results, status) {
       if (status === google.maps.GeocoderStatus.OK) {
-        console.log("GeoCoder: ", results);
+        console.log('GeoCoder: ', results);
         markerArray.push(
           new google.maps.Marker({
-              map: map,
-              position: results[0].geometry.location,
-              animation: google.maps.Animation.DROP,
-              title: name,
+            map: map,
+            position: results[0].geometry.location,
+            animation: google.maps.Animation.DROP,
+            title: name,
           }));
-          console.log(markerArray)
-          centerMap();
-        } 
-        else {
-          alert('Geocode was not successful for the following reason: ' + status);
-        }
-      });
+        console.log(markerArray)
+        centerMap();
+      } 
+      else {
+        console.log('Geocoder error: Marker for ' + name + ' not added.');
+      }
+    });
   }
 
   function changeCheckedRadius() {

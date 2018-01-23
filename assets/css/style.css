@@ -67,12 +67,12 @@ body {
 
 }
 
-#info-modal-label {
+#info-modal-title {
     color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
 }
 
-#addr-modal-label {
+#addr-modal-title {
     color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
 }
@@ -112,4 +112,14 @@ body {
 .error-text {
     color: red;
     font-weight: bold;
+}
+
+#err-modal-body {
+    color: #3be1ec;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+#err-modal-title {
+    color: #fff;
+    font-family: 'Ubuntu Condensed', sans-serif;
 }
