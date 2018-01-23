@@ -49,6 +49,7 @@ $(document).ready(function () {
     });
 
     map.setCenter(location);
+    $("#map").css('box-shadow', '0px 0px 10px #3be1ec, 0px 0px 10px #3be1ec');
     $('#radius').show();
     getRestaurants();
   }
