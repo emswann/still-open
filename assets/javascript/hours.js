@@ -3,26 +3,22 @@ function Hours(periodArray, weekdayTextArray) {
   this.hoursArray = (() => {
     
     var getRefDay = periodObj => {
-      var dayNum = 0;
-
-      (typeof(periodObj.open) === 'undefined') 
-        ? dayNum = periodObj.close.day 
-        : dayNum = periodObj.open.day;
-
-      return dayNum;
-  }
+      return (typeof(periodObj.open) === 'undefined') 
+              ? periodObj.close.day 
+              : periodObj.open.day;
+    }
     
-  function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
-    var addDefaultElement = function(day) {
-      return {close:    {day:     day,
-                         time:    '0000',
-                         hours:   0,
-                         minutes: 0},
-              open:     {day:     day,
-                         time:    '0000',
-                         hours:   0,
-                         minutes: 0},
-              isDefault: true};
+    function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
+      var addDefaultElement = function(day) {
+        return {close:    {day:     day,
+                           time:    '0000',
+                           hours:   0,
+                           minutes: 0},
+                open:     {day:     day,
+                           time:    '0000',
+                           hours:   0,
+                           minutes: 0},
+                isDefault: true};
     }
 
     var checkFor24Hrs = text => {
@@ -43,12 +39,10 @@ function Hours(periodArray, weekdayTextArray) {
 
       return isCrossover;
     }
-
-    var refDayIndex;
       
-    (typeof(periodObj) !== 'undefined')
-      ? refDayIndex = getRefDay(periodObj)
-      : refDayIndex = 0;
+    var refDayIndex = (typeof(periodObj) !== 'undefined')
+                       ? getRefDay(periodObj)
+                       : 0;
 
     this.text        = weekdayTextStr;
     this.isOpen24Hrs = checkFor24Hrs(this.text);
@@ -58,11 +52,11 @@ function Hours(periodArray, weekdayTextArray) {
        2) 24 hour restaurants
        3) Fill end of day of week.
        NOTE: weekdayTxtStr is always populated for all days of the week either with hours, closed text or open 24 hours text. */
-    ((currDayIndex < refDayIndex) 
+    tmpPeriodObj = ((currDayIndex < refDayIndex) 
         || (typeof(periodObj) === 'undefined') 
         || (this.isOpen24Hrs))
-      ? tmpPeriodObj = addDefaultElement(currDayIndex)
-      : tmpPeriodObj = periodObj;
+      ? addDefaultElement(currDayIndex)
+      : periodObj;
 
     this.open        = {day    : tmpPeriodObj.open.day,
                         time   : tmpPeriodObj.open.time,
