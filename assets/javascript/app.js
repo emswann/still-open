@@ -161,23 +161,23 @@ $(document).ready(function () {
 
     return new Promise((resolve, reject) => {
       var filteredRadiusArray = [];
-        service.nearbySearch(request, function (results, status) {
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
+      service.nearbySearch(request, function (results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
 
-            function checkRadiusDistance(place, centerLatLng, radius) {
-              return google.maps.geometry.spherical.computeDistanceBetween(place.geometry.location, centerLatLng) < radius
-            }
-            for (var i = 0; i < results.length; i++) {
-              if (checkRadiusDistance(results[i], location, meterCount)) {
-                filteredRadiusArray.push(results[i]);
-              }
-            }
-            resolve(filteredRadiusArray);
-          } 
-          else {
-            reject(status);
+          function checkRadiusDistance(place, centerLatLng, radius) {
+            return google.maps.geometry.spherical.computeDistanceBetween(place.geometry.location, centerLatLng) < radius
           }
-        });
+          for (var i = 0; i < results.length; i++) {
+            if (checkRadiusDistance(results[i], location, meterCount)) {
+              filteredRadiusArray.push(results[i]);
+            }
+          }
+          resolve(filteredRadiusArray);
+        } 
+        else {
+          reject(status);
+        }
+      });
     });
   }
 
@@ -187,7 +187,7 @@ $(document).ready(function () {
         placeId: place.place_id
       },
       function (place, status) {
-        if (status == google.maps.places.PlacesServiceStatus.OK) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
           resolve(place);
         } 
         else {
@@ -214,7 +214,7 @@ $(document).ready(function () {
           }));
         console.log(markerArray)
         centerMap();
-      }
+      } 
       else {
         console.log('Geocoder error: Marker for ' + name + ' not added.');
       }
