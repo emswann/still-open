@@ -51,9 +51,19 @@ $(document).ready(function () {
     map.setCenter(location);
     oms = new OverlappingMarkerSpiderfier(map, {
       markersWontMove: true,
-      markersWontHide: true,
-      basicFormatEvents: true
+      markersWontHide: true
     });
+
+    oms.addListener('format', function(marker, status) {
+      var iconURL = status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIED ? 'assets/images/greenmarker.png' :
+        status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE ? 'assets/images/pinkmarker.png' :
+        status == OverlappingMarkerSpiderfier.markerStatus.UNSPIDERFIABLE ? 'assets/images/greenmarker.png' :
+        null;
+      marker.setIcon({
+        url: iconURL
+      });
+    });
+
     $('#radius').show();
     getRestaurants();
   }
