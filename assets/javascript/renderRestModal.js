@@ -6,26 +6,29 @@ function renderRestModal(arr, id) {
     if (infoArray[i].place_id === labelId) {
       $('#info-modal-body').empty();
 
-      var modalLine = $('<h3>').text(infoArray[i].nameStr);
+      var modalLine = $('<h3 id="rest-name">').html(infoArray[i].nameStr);
       $('#info-modal-body').append(modalLine);
 
-      modalLine = $('<h3>').text('Address: ' + infoArray[i].addressStr);
+      modalLine = $('<h3>').html('Address: ' + '<span id="address">' + infoArray[i].addressStr + '</span>');
       $('#info-modal-body').append(modalLine);
 
-      modalLine = $('<h3>').text('Cost: ' + infoArray[i].cost);
+      modalLine = $('<h3>').html('Cost: ' + '<span id="cost">' + infoArray[i].cost + '</span>');
       $('#info-modal-body').append(modalLine);
 
-      modalLine = $('<h3>').text('Phone: ' + infoArray[i].phoneStr);
+      modalLine = $('<h3>').html('Phone: ' + '<span id="phone">' + infoArray[i].phoneStr + '</span>');
       $('#info-modal-body').append(modalLine);
 
-      modalLine = $('<h3>').text('URL: ');
+      modalLine = $('<h3>').html('URL: ');
       $('#info-modal-body').append(modalLine);
 
       modalLine = $('<a>', {
-        text:   infoArray[i].websiteStr,
         href:   infoArray[i].websiteStr,
-        target: "_blank"
-      })
+        target: "_blank",
+        class: 'rest-link'
+      });
+
+      modalURL = $('<h3>').html(infoArray[i].websiteStr);
+      modalLine.append(modalURL);
       $('#info-modal-body').append(modalLine);
     }
   }
