@@ -1,9 +1,17 @@
+/* CSS stylesheet to style HTML elements for the Still Open application.
+ 
+   NAME: style.css
+   AUTHOR: Robert Brown, Joshua Lewis, Elaina Swann
+   DATE: 01/25/2018
+   REVISION LOG: 
+*/
+
 * {
     box-sizing: border-box;
 }
 
 body {
-    background: url("../images/skyline.jpg");
+    background: url('../images/skyline.jpg');
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
