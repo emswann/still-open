@@ -4,7 +4,6 @@ function renderList(apiArr) {
 
   var container   = $('#list-container');
   var listArr     = apiArr.array();
-
   var textStr     = '';
 
   var nowMoment = moment();
@@ -86,10 +85,15 @@ function renderList(apiArr) {
       }
     }
     else {
-      var messageDiv = $('<p>')
+      var messageDiv = $('<h3>')
                          .addClass('row')
                          .attr('id', 'no-rest-message')
-                         .text('No restaurants are open within the search area');
+                         .text('No restaurants are open within the search area.');
+        var errorImg = $('<img>')
+                        .attr('src', 'assets/images/closed.jpg')
+                        .attr('id', 'error-img')
+                        .addClass('col-xs-12 col-sm-12 col-md-12');
+      messageDiv.append(errorImg);
       container.append(messageDiv);
     }
   })();
