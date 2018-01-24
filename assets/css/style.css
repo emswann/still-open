@@ -65,6 +65,13 @@ body {
     text-shadow: 0 0 3px #3be1ec;
 }
 
+#btn-rest-next {
+    font-size: 1.25em;
+    color: #000;
+    font-family: 'Ubuntu Condensed', sans-serif;
+    text-shadow: 0 0 3px #3be1ec;
+}
+
 .time-info .close-info {
     color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
