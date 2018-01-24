@@ -54,7 +54,7 @@ function Restaurants(searchAPIArray, detailAPIArray) {
     this.nameStr         = apiObj.name;
     this.addressStr      = apiObj.formatted_address;
     this.phoneStr        = apiObj.formatted_phone_number; 
-    this.hoursObj        = formatHours(apiObj.opening_hours.periods,
+    this.hoursArray      = formatHours(apiObj.opening_hours.periods,
                                        apiObj.opening_hours.weekday_text);
     this.cost            = formatCost(apiObj.price_level);
     this.websiteStr      = apiObj.website 
@@ -99,7 +99,7 @@ function Restaurants(searchAPIArray, detailAPIArray) {
 
     var dayOfWeek   = currTime.day();
 
-    var hoursInfo  = this.hoursObj.hoursArray[dayOfWeek];
+    var hoursInfo  = this.hoursArray[dayOfWeek];
 
     if (!hoursInfo.isOpen24Hrs) { 
       timeObj = setTimes(currTime, hoursInfo);
@@ -110,7 +110,7 @@ function Restaurants(searchAPIArray, detailAPIArray) {
         var prevTime = moment(currTime).subtract(1, 'd');
         var prevDayOfWeek = prevTime.day(); 
 
-        var prevHoursInfo  = this.hoursObj.hoursArray[prevDayOfWeek];
+        var prevHoursInfo  = this.hoursArray[prevDayOfWeek];
 
         /* Reload the time data with the previous day information and reset. */
         timeObj = setTimes(prevTime, prevHoursInfo);
@@ -155,25 +155,3 @@ function Restaurants(searchAPIArray, detailAPIArray) {
     return sortArray(searchAPIArray, restaurantArray);
   })(); 
 }
-
-Restaurants.prototype.array = function() {
-  return this.restaurantArray;
-}
-
-Restaurants.prototype.get = function(index) {
-  return (index < this.restaurantArray.length) 
-    ? this.restaurantArray[index] 
-    : undefined;
-}
-
-Restaurants.prototype.delete = function(index) {
-  isSuccess = false;
-
-  if (index < this.restaurantArray.length) {
-    this.restaurantArray.splice(index, 1);
-    isSuccess = true;
-  }  
-
-  return {status: isSuccess, element: this.restaurantArray};
-}
-
