@@ -29,6 +29,7 @@ body {
 
 #list-container {
     height: 600px;
+    margin-bottom: 20px;
 }
 
 .list {
@@ -76,6 +77,10 @@ body {
     text-shadow: 1px 1px 3px #f0f;
     background: none;
     border: none;
+}
+
+.time-info {
+    padding-left: 0;
 }
 
 #map-container {
@@ -184,4 +189,33 @@ body {
 #err-modal-title {
     color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+#no-rest-message {
+    color: red;
+    font-family: 'Ubuntu Condensed', sans-serif;
+    text-shadow: 0 0 3px #fff, 0 0 3px #fff;
+    text-align: center;
+}
+
+#error-img {
+    animation: slide-up 0.5s ease;
+}
+
+@media screen and (max-width: 980px) {
+    #list-container {
+        height: 100%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #list-container {
+        height: 100%;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    #list-container {
+        height: 100%;
+    }
 }
