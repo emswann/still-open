@@ -1,24 +1,22 @@
 function Hours(periodArray, weekdayTextArray) {
-
-  this.hoursArray = (() => {
     
-    var getRefDay = periodObj => {
-      return (typeof(periodObj.open) === 'undefined') 
-              ? periodObj.close.day 
-              : periodObj.open.day;
-    }
+  var getRefDay = periodObj => {
+    return (typeof(periodObj.open) === 'undefined') 
+            ? periodObj.close.day 
+            : periodObj.open.day;
+  }
     
-    function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
-      var addDefaultElement = function(day) {
-        return {close:    {day:     day,
-                           time:    '0000',
-                           hours:   0,
-                           minutes: 0},
-                open:     {day:     day,
-                           time:    '0000',
-                           hours:   0,
-                           minutes: 0},
-                isDefault: true};
+  function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
+    var addDefaultElement = function(day) {
+      return {close:    {day:     day,
+                         time:    '0000',
+                         hours:   0,
+                         minutes: 0},
+              open:     {day:     day,
+                         time:    '0000',
+                         hours:   0,
+                         minutes: 0},
+              isDefault: true};
     }
 
     var checkFor24Hrs = text => {
@@ -69,49 +67,38 @@ function Hours(periodArray, weekdayTextArray) {
     this.isCrossover = checkForCrossover(tmpPeriodObj);
     this.isDefault   = (typeof(tmpPeriodObj.isDefault) === 'undefined')
                           ? false : true; // Set isDefault to true if !undefined.
-    }
+  }
 
-    return (() => {
-      const PERIOD_SUNDAY = 0;
-      const PERIOD_TO_WEEKDAY_MAP = [6, 0, 1, 2, 3, 4, 5]; // Array index is the period.
+  return (() => {
+    const PERIOD_SUNDAY = 0;
+    const PERIOD_TO_WEEKDAY_MAP = [6, 0, 1, 2, 3, 4, 5]; // Array index is the period.
 
-      var hoursArray = [];
+    var hoursArray = [];
 
-      var currDayIndex = PERIOD_SUNDAY;
-      /* Use periodArray as the driver. 0 = Sunday. 6 = Saturday. weekdayTxtArray starts at 0 = Monday, so need to adjust for values. */
-      for (let i = PERIOD_SUNDAY; 
-               currDayIndex < PERIOD_TO_WEEKDAY_MAP.length 
-                 && i < periodArray.length; 
-               i++) {
+    var currDayIndex = PERIOD_SUNDAY;
+    /* Use periodArray as the driver. 0 = Sunday. 6 = Saturday. weekdayTxtArray starts at 0 = Monday, so need to adjust for values. */
+    for (let i = PERIOD_SUNDAY; 
+          currDayIndex < PERIOD_TO_WEEKDAY_MAP.length 
+          && i < periodArray.length; 
+          i++) {
 
-        var dayNum = getRefDay(periodArray[i]);  
-        while (currDayIndex <= dayNum) {
-          hoursArray.push(new DayOfWeek(currDayIndex,
-                                        periodArray[i], 
-                                        weekdayTextArray[PERIOD_TO_WEEKDAY_MAP[currDayIndex]]));
-          currDayIndex++;
-        }
-      }
-
-      /* Need to consider case where we run out of periodArray values and still have days of the week we need to process. Process these until end of the week. */
-      while (currDayIndex < PERIOD_TO_WEEKDAY_MAP.length) {
+      var dayNum = getRefDay(periodArray[i]);  
+      while (currDayIndex <= dayNum) {
         hoursArray.push(new DayOfWeek(currDayIndex,
-                                      undefined, 
+                                      periodArray[i], 
                                       weekdayTextArray[PERIOD_TO_WEEKDAY_MAP[currDayIndex]]));
         currDayIndex++;
       }
+    }
 
-      return hoursArray;
-    })(); 
+    /* Need to consider case where we run out of periodArray values and still have days of the week we need to process. Process these until end of the week. */
+    while (currDayIndex < PERIOD_TO_WEEKDAY_MAP.length) {
+      hoursArray.push(new DayOfWeek(currDayIndex,
+                                    undefined, 
+                                    weekdayTextArray[PERIOD_TO_WEEKDAY_MAP[currDayIndex]]));
+      currDayIndex++;
+    }
+
+    return hoursArray;
   })();
-}
-
-Hours.prototype.array = function() {
-  return this.hoursArray;
-}
-
-Hours.prototype.get = function(index) {
-  return (index < this.hoursArray.length) 
-    ? this.hoursArray[index] 
-    : undefined;
 }

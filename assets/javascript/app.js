@@ -258,7 +258,7 @@ $(document).ready(function () {
   }
 
   function runRestModal() {
-    renderRestModal(restInfoArray, $(this).attr('data-id')); 
+    renderRestModal(restInfoArray[parseInt($(this).attr('data-index'))]); 
   }
 
   $('.radio-button').on('click', changeCheckedRadius);
