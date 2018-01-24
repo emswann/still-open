@@ -141,7 +141,9 @@ $(document).ready(function () {
   */
   async function getRestaurants() {
     try {
-      const MAX_QUERY_SIZE = 9;
+      var getRStart = moment();
+
+      const MAX_QUERY_SIZE = 1;
       const NUMBER_OF_RAD_BUTTONS = 3
       const METERS_TO_MILES = [0, 1609.34, 3218.69, 6437.38];
 
@@ -164,7 +166,7 @@ $(document).ready(function () {
 
       try {
         searchAPIArray = await nearBySearch();
-        dummyVar = await delayProcess(1000);
+        dummyVar = await delayProcess(100);
       }
       catch(error) {
         throw(error);
@@ -174,19 +176,24 @@ $(document).ready(function () {
       var chunkArray = divideArray(searchAPIArray, MAX_QUERY_SIZE);
       console.log('Chunk: ', chunkArray);
 
+      var detailsStart = moment();
+
+      var detailsDelay = 120;
       var result;
       for (let i = 0; i < chunkArray.length; i++) {
         try {
           result = await processSlice(chunkArray[i]);
-          dummyVar = await delayProcess(3950);
+          dummyVar = await delayProcess(detailsDelay);
         }
         catch (error) {
           /* Wait and try one more time. Then forget about it. Go ahead and fail. */
           try {
             console.log('Google Places Details failed...trying again.');
-            dummyVar = await delayProcess(4500);
+
+            /* Google requires 1 second wait before requesting again after a failure. */
+            dummyVar = await delayProcess(1100);
             result = await processSlice(chunkArray[i]);
-            dummyVar = await delayProcess(3950);
+            dummyVar = await delayProcess(detailsDelay);
           }
           catch (error) {
             throw(error);
@@ -198,11 +205,19 @@ $(document).ready(function () {
         detailAPIArray = detailAPIArray.concat(result);
       }
 
+      var detailsEnd = moment();
+      console.log('Elapsed Time - details: ', moment.duration(detailsEnd.diff(detailsStart)));
+
       restInfoArray = new Restaurants(searchAPIArray, detailAPIArray);
       console.log('R: ', restInfoArray);
 
       renderList(restInfoArray);
 
+      var getRStop = moment();
+      console.log('Elapsed Time - getRests: ', moment.duration(getRStop.diff(getRStart)));
+
+      /* Delay radius button availability a bit to make sure have enough time passed to query the APIs again. */
+      dummyVar = await delayProcess(500);
       $('.radio-button').prop('disabled', false);
     }
     catch (error) {
