@@ -75,7 +75,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close reload" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 class="modal-title" id="addr-modal-title">Please enter address to find location.<br>At least city/state or zip code.</h4>
@@ -98,11 +98,11 @@
                             <label for="addr-zipcode">Zip Code</label>
                             <input type="number" class="form-control" id="addr-zipcode" placeholder="">
                         </div>
-                        <button type="submit" class="btn btn-primary" id="btn-addr">Submit</button>
+                        <button type="submit" class="btn btn-primary" id="btn-addr-submit">Submit</button>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <button type="button" class="btn btn-default reload" id="btn-addr-close" data-dismiss="modal">
                         Close
                     </button>
                 </div>
@@ -115,7 +115,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close reload" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 class="modal-title" id="err-modal-title">Error!</h4>
@@ -124,7 +124,7 @@
                     <!-- Divs are dynamically created by JavaScript -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="reset-btn">
+                    <button type="button" class="btn btn-default reload" data-dismiss="modal" id="reset-btn">
                         Refresh App
                     </button>
                 </div>

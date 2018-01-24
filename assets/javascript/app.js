@@ -262,8 +262,8 @@ $(document).ready(function () {
   }
 
   $('.radio-button').on('click', changeCheckedRadius);
-  $('#btn-addr').on('click', processAddrModal);
-  $('#reset-btn').on('click', reloadPage);
+  $('#btn-addr-submit').on('click', processAddrModal);
+  $('.reload').on('click', reloadPage);
   $(document).on('click', '[id^=item-]', runRestModal);
 });
 
