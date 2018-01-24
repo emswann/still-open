@@ -1,9 +1,8 @@
-function renderList(apiArr) {
+function renderList(listArr) {
   const MAX_COUNT = 10;
   const TIMEFRAME = 120; // 2 hours or 120 mins.
 
   var container   = $('#list-container');
-  var listArr     = apiArr.array();
   var textStr     = '';
 
   var nowMoment = moment();
@@ -16,7 +15,7 @@ function renderList(apiArr) {
 
       for (let i = 0; i < listArr.length && i < MAX_COUNT; i++) {
         var {sendAlert, timeLeft, closeTimeStr, isOpen24Hrs} =
-          apiArr.isClosing(i, nowMoment, TIMEFRAME);
+          listArr[i].isClosing(nowMoment, TIMEFRAME);
  
         var rest = $('<div>')
           .addClass('row list restaurant');
