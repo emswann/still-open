@@ -2,7 +2,7 @@ var createMarkers;
 var geocodeAddr;
 
 $(document).ready(function () {
-  var map, location, marker, geocoder, service, bounds, restMarkers;
+  var map, location, marker, geocoder, service, bounds, restMarkers, oms;
   var searchAPIArray = [];
   var restInfoArray = [];
   var markerArray = [];
@@ -49,6 +49,22 @@ $(document).ready(function () {
     });
 
     map.setCenter(location);
+    
+    oms = new OverlappingMarkerSpiderfier(map, {
+      markersWontMove: true,
+      markersWontHide: true
+    });
+
+    oms.addListener('format', function(marker, status) {
+      var iconURL = status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIED ? 'assets/images/greenmarker.png' :
+        status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE ? 'assets/images/pinkmarker.png' :
+        status == OverlappingMarkerSpiderfier.markerStatus.UNSPIDERFIABLE ? 'assets/images/greenmarker.png' :
+        null;
+      marker.setIcon({
+        url: iconURL
+      });
+    });
+    
     $("#map").css('box-shadow', '0px 0px 10px #3be1ec, 0px 0px 10px #3be1ec');
     $('#radius').show();
     getRestaurants();
@@ -213,6 +229,11 @@ $(document).ready(function () {
             animation: google.maps.Animation.DROP,
             title: name,
           }));
+          for (var i = 0; i < markerArray.length; i++) {
+            var element = markerArray[i];
+            oms.addMarker(element)
+          }
+          
         console.log(markerArray)
         centerMap();
       } 
