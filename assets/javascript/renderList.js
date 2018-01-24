@@ -83,6 +83,20 @@ function renderList(apiArr) {
         container.append(rest);
         createMarkers(listArr[i].addressStr, listArr[i].nameStr);
       }
+
+      var nextBtnRow = $('<div>')
+        .addClass('row list');
+      container.append(nextBtnRow);
+
+      var nextBtn = $('<button>')
+        .addClass('btn btn-default')
+        .attr({
+          'type':     'button',
+          'id':       'btn-rest-next',
+          'disabled': 'disabled'
+        })
+        .text('Next');
+      nextBtnRow.append(nextBtn);
     }
     else {
       var messageDiv = $('<h3>')
