@@ -1,13 +1,45 @@
+/**
+ * @file Constructs Hours and DayOfWeek objects for the Still Open application. 
+ * @author Robert Brown, Joshua Lewis, Elaina Swann
+ * @version 1.0 
+*/
+
+/** 
+ * @constructor Hours
+ * @constructs {Object[]} DayOfWeek objects array.
+ * @param {Object[]} periodArray - Open/close time info per day. Weekdays where restaurant is closed do not have a period object. Open 24 hour restaurants have 1 period object with either open OR close populated (not both). Uses 0 = Sunday, 6 = Saturday.
+ * @param {array} weekdayTextArray - Time string per day of the week. All 7 days are always populated. Uses 0 = Monday, 6 = Sunday. (Thank you Google!)
+ * @returns {Object[]} DayOfWeek objects array.
+*/
 function Hours(periodArray, weekdayTextArray) {
     
-  var getRefDay = periodObj => {
+  /** 
+   * @function Hours.getRefDay 
+   * @description Determines which day object (open/close) to extract day. Defaults to using open day unless undefined. Otherwise, uses close day. (Needed due to inconsistencies for 24 hour restaurants.)
+   * @param {Object} periodObj - Period object mapped to current day.
+   * @returns {number} Reference day.
+  */
+  var getRefDay = (periodObj => {
     return (typeof(periodObj.open) === 'undefined') 
-            ? periodObj.close.day 
-            : periodObj.open.day;
-  }
-    
+              ? periodObj.close.day 
+              : periodObj.open.day;
+  });
+     
+  /** 
+   * @constructor DayOfWeek 
+   * @constructs {Object} Object with day of week info in format easily used by the app.
+   * @param {number} currDayIndex - Current day.
+   * @param {Object} periodObj - Period object mapped to current day.
+   * @param {string} weekdayTextStr - Period text mapped to current day.
+  */
   function DayOfWeek(currDayIndex, periodObj, weekdayTextStr) {
-    var addDefaultElement = function(day) {
+
+    /** 
+     * @function DayOfWeek.addDefaultPeriod 
+     * @description Adds default period object to fill missing API days.
+     * @returns {Object} Default period object.
+    */      
+    var addDefaultPeriod = (day => {
       return {close:    {day:     day,
                          time:    '0000',
                          hours:   0,
@@ -17,15 +49,27 @@ function Hours(periodArray, weekdayTextArray) {
                          hours:   0,
                          minutes: 0},
               isDefault: true};
-    }
+    });
 
-    var checkFor24Hrs = text => {
+    /** 
+     * @function DayOfWeek.checkFor24Hrs 
+     * @description Determines if restaurant is open 24 hours.
+     * @param {string} text - String checked for 24 hour regular expression.
+     * @returns {boolean} Is open 24 hours.
+    */ 
+    var checkFor24Hrs = (text => {
       var regex = new RegExp(/open 24 hours/, 'gi');
 
       return regex.test(text);
-    }
+    });
 
-    var checkForCrossover = periodObj => {
+    /** 
+     * @function DayOfWeek.checkForCrossover 
+     * @description Determines if restaurant has open time in one day and close time in the next day (crossover).
+     * @param {Object} periodObj - Period info to determine crossover.
+     * @returns {boolean} Is restaurant a crossover.
+    */ 
+    var checkForCrossover = (periodObj => {
       var isCrossover = false;
 
       /* Need to check special case of when close day wrap around to 0. */
@@ -33,27 +77,27 @@ function Hours(periodArray, weekdayTextArray) {
           || ((periodObj.close.day === 0) && (periodObj.open.day === 6))) {
         isCrossover = true;
       }
-      // else isCrossover is already initialized to false.
+      /* else isCrossover is already initialized to false. */
 
       return isCrossover;
-    }
+    });
       
     var refDayIndex = (typeof(periodObj) !== 'undefined')
-                       ? getRefDay(periodObj)
-                       : 0;
+                      ? getRefDay(periodObj)
+                      : 0;
 
     this.text        = weekdayTextStr;
     this.isOpen24Hrs = checkFor24Hrs(this.text);
 
-    /* Do this first to determine if default element is required.
+    /* Do first to determine if default element is required.
        1) Closed days
        2) 24 hour restaurants
-       3) Fill end of day of week.
+       3) Fill to end of week.
        NOTE: weekdayTxtStr is always populated for all days of the week either with hours, closed text or open 24 hours text. */
-    tmpPeriodObj = ((currDayIndex < refDayIndex) 
-        || (typeof(periodObj) === 'undefined') 
-        || (this.isOpen24Hrs))
-      ? addDefaultElement(currDayIndex)
+    var tmpPeriodObj = ((currDayIndex < refDayIndex) 
+                        || (typeof(periodObj) === 'undefined') 
+                        || (this.isOpen24Hrs))
+      ? addDefaultPeriod(currDayIndex)
       : periodObj;
 
     this.open        = {day    : tmpPeriodObj.open.day,
@@ -66,12 +110,12 @@ function Hours(periodArray, weekdayTextArray) {
                         minutes: tmpPeriodObj.close.minutes};
     this.isCrossover = checkForCrossover(tmpPeriodObj);
     this.isDefault   = (typeof(tmpPeriodObj.isDefault) === 'undefined')
-                          ? false : true; // Set isDefault to true if !undefined.
+                        ? false : true; /* isDefault is false if defined. */
   }
 
   return (() => {
     const PERIOD_SUNDAY = 0;
-    const PERIOD_TO_WEEKDAY_MAP = [6, 0, 1, 2, 3, 4, 5]; // Array index is the period.
+    const PERIOD_TO_WEEKDAY_MAP = [6, 0, 1, 2, 3, 4, 5]; 
 
     var hoursArray = [];
 
@@ -91,7 +135,7 @@ function Hours(periodArray, weekdayTextArray) {
       }
     }
 
-    /* Need to consider case where we run out of periodArray values and still have days of the week we need to process. Process these until end of the week. */
+    /* Need to consider case where run out of periodArray values and still have days to process. Process these until end of week. */
     while (currDayIndex < PERIOD_TO_WEEKDAY_MAP.length) {
       hoursArray.push(new DayOfWeek(currDayIndex,
                                     undefined, 

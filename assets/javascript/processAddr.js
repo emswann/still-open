@@ -1,7 +1,19 @@
+/**
+ * @file Defines Address modal processing functionality for the Still Open application. 
+ * @author Robert Brown, Joshua Lewis, Elaina Swann
+ * @version 1.0 
+*/
+
+/** 
+ * @function showAddrError 
+ * @description Processes errors based on validating address input.
+ * @param {Object} errorObj - Booleans detailing validation.
+ * @param {Object} addressObj - Address info.
+*/
 function showAddrError(errorObj, addressObj) {
   var defaultStr = ' is not valid!';
 
-  /* Check if all required input is missing first, since it sets the same fields as other state/zip checks. */
+  /* Check if all required input is missing first, since set same fields as other state/zip checks. */
   if (!errorObj.hasMinInput || !errorObj.hasCityState || !errorObj.hasZipCode) {
     addAddrError('form-addr-city', 
                  (addressObj.city() === '') ? 'Empty field' + defaultStr : '');
@@ -21,6 +33,12 @@ function showAddrError(errorObj, addressObj) {
   }
 }
 
+/** 
+ * @function addAddrError 
+ * @description Adds error DOM attributes and elements to an id. 
+ * @param {string} id - HTML id (no #) to add errors.
+ * @param {string} error - Error text placed below address field.
+*/
 function addAddrError(id, error) {
   $('#' + id).addClass('has-error');
   $('#' + id).children('input').addClass('error-input'); 
@@ -28,12 +46,20 @@ function addAddrError(id, error) {
                               .text(error));         
 }
 
+/** 
+ * @function removeAddrError 
+ * @description Removes error DOM attributes and elements so DOM is clean when user submits address. 
+*/
 function removeAddrError() {
   $('[id^=form-addr-]').removeClass('has-error');
   $('[id^=form-addr-]').children('input').removeClass('error-input'); 
   $('.error-text').detach();
 }
 
+/** 
+ * @function processAddr 
+ * @description Evaluates address modal after user inputs/submits address. Either address is okay with input/geocoder results - continue application processing. Or errors detected - user must input/submit address again. 
+*/
 function processAddr() {
   removeAddrError();
 

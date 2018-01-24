@@ -1,3 +1,10 @@
+/**
+ * @file Defines main processing functionality for the Still Open application. 
+ * @author Robert Brown, Joshua Lewis, Elaina Swann
+ * @version 1.0 
+*/
+
+/* These global function declarations are here because other functions outside .ready block need to call them. */
 var createMarkers;
 var geocodeAddr;
 
@@ -8,7 +15,10 @@ $(document).ready(function () {
   var markerArray = [];
   var meterCount;
 
-  // Immediately (self) invoked function which initializes application after document is loaded.
+  /** 
+   * @function initialize (self-invoking)
+   * @description Initializes application.
+  */
   (function initialize() {
     $('.radio-button').prop('disabled', true);
     $('#radius').hide();
@@ -20,10 +30,19 @@ $(document).ready(function () {
     }
   })();
 
+  /** 
+   * @function promptUserAddr
+   * @description Pops up address modal.
+  */
   function promptUserAddr() {
-    $("#addr-modal").modal("show");
+    $('#addr-modal').modal('show');
   }
 
+  /** 
+   * @function googleMap
+   * @description Gets user geolocation using Googles Map.
+   * @param {Object} position Object with latitude and longitude.
+  */
   function googleMap(position) {
     location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     bounds = new google.maps.LatLngBounds();
@@ -34,6 +53,10 @@ $(document).ready(function () {
     renderMap();
   }
 
+  /** 
+   * @function renderMap
+   * @description Renders map using Google Maps, Marker, and Spiderfier.
+  */
   function renderMap() {
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 100,
@@ -56,29 +79,42 @@ $(document).ready(function () {
     });
 
     oms.addListener('format', function(marker, status) {
-      var iconURL = status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIED ? 'assets/images/greenmarker.png' :
-        status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE ? 'assets/images/pinkmarker.png' :
-        status == OverlappingMarkerSpiderfier.markerStatus.UNSPIDERFIABLE ? 'assets/images/greenmarker.png' :
-        null;
+      var iconURL = 
+        status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIED 
+          ? 'assets/images/greenmarker.png' 
+          : status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE 
+            ? 'assets/images/pinkmarker.png' 
+            : status == OverlappingMarkerSpiderfier.markerStatus.UNSPIDERFIABLE
+              ? 'assets/images/greenmarker.png' 
+              : null;
       marker.setIcon({
         url: iconURL
       });
     });
     
-    $("#map").css('box-shadow', '0px 0px 10px #3be1ec, 0px 0px 10px #3be1ec');
+    $('#map').css('box-shadow', '0px 0px 10px #3be1ec, 0px 0px 10px #3be1ec');
     $('#radius').show();
     getRestaurants();
   }
 
+  /** 
+   * @function centerMap
+   * @description Centers map based on user location.
+  */
   function centerMap() {
-    for (var i = 0; i < markerArray.length; i++) {
-      bounds.extend(markerArray[i].getPosition());
-    };
+    markerArray.forEach(marker => {
+      bounds.extend(marker.getPosition());
+    })
 
     map.fitBounds(bounds);
     map.setCenter(location);
   }
 
+  /** 
+   * @function geocodeAddr
+   * @description Geocodes user address using Google Geocoder.
+   * @param {string} addressStr Comma delimited user address.
+  */
   geocodeAddr = function (addressStr) {
     var geocoder = new google.maps.Geocoder();
     var appError;
@@ -98,23 +134,29 @@ $(document).ready(function () {
     });
   }
 
+  /**
+   * @async
+   * @function getRestaurants
+   * @description Complete processing to go from API search data to Restaurant detail info in a app friendly format. Uses Google Places, Google Places Details.
+  */
   async function getRestaurants() {
     const MAX_QUERY_SIZE = 9;
-    const numberOfRadButtons = 3
-    const metersToMiles = [0, 1609.34, 3218.69, 6437.38];
+    const NUMBER_OF_RAD_BUTTONS = 3
+    const METERS_TO_MILES = [0, 1609.34, 3218.69, 6437.38];
+
     var dummyVar = 0;
     var detailAPIArray = [];
 
-    for (var i = 1; i <= numberOfRadButtons; i++) {
-      var element = $("#radio-button-" + i)
+    for (var i = 1; i <= NUMBER_OF_RAD_BUTTONS; i++) {
+      var element = $('#radio-button-' + i)
       var meters = [0, 1609.34, 3218.69, 6437.38];
       if (element.prop('checked')) {
-        meterCount = metersToMiles[i]
+        meterCount = METERS_TO_MILES[i]
       }
         console.log(meterCount)
     }
 
-    // Use current location (global variable) to determine restaurant list.
+    /* Use current location (global variable) to determine restaurant list. */
     console.log('RL Latitude: ' + location.lat());
     console.log('RL Longitude: ' + location.lng());
     service = new google.maps.places.PlacesService(map);
@@ -149,7 +191,7 @@ $(document).ready(function () {
         }
       }
 
-      // Do this after the delay.
+      /* Do this after the delay. */
       console.log('D-' + i + ': ', result);
       detailAPIArray = detailAPIArray.concat(result);
     }
@@ -161,10 +203,21 @@ $(document).ready(function () {
     renderList(restInfoArray);
   }
 
+  /**
+   * @async
+   * @function processSlice
+   * @description Processes chunk of API Nearby Search array to get detail info for each restaurant.
+   * @param {Object[]} array - Restaurant object array.
+  */
   function processSlice(array) {
     return Promise.all(array.map(findDetail));
   }
 
+  /**
+   * @async
+   * @function nearBySearch
+   * @description API request for Google Places (Nearby Search).
+  */
   function nearBySearch() {
     var request = {
       location: {
@@ -198,6 +251,12 @@ $(document).ready(function () {
     });
   }
 
+  /**
+   * @async
+   * @function findDetail
+   * @description API request for Google Places Details.
+   * @param {Object} place - Restaurant object.
+  */
   function findDetail(place) {
     return new Promise((resolve, reject) => {
       service.getDetails({
@@ -214,6 +273,12 @@ $(document).ready(function () {
     });
   }
 
+  /**
+   * @function createMarkers
+   * @description Adds restaurant markers to the map using Google Geocoder, Marker.
+   * @param {Object} latlng - Google API specific latitude/longitude object.
+   * @param {string} name - Restaurant name.
+  */
   createMarkers = function (latlng, name) {
     var geocoder = new google.maps.Geocoder();
 
@@ -243,27 +308,66 @@ $(document).ready(function () {
     });
   }
 
+  /**
+   * @function changeCheckedRadius
+   * @description Renders map when user changes map radius.
+  */
   function changeCheckedRadius() {
     renderMap(); 
     $('.radio-button').prop('disabled', true);
   }
 
+  /**
+   * @function processAddrModal
+   * @description Top level function to handle when user submits address via modal.
+  */
   function processAddrModal() {
     event.preventDefault();
     processAddr();
   }
 
+  /**
+   * @function reloadPage
+   * @description Reloads webpage.
+  */
   function reloadPage() {
     window.location.reload(true);
   }
 
+  /**
+   * @function runRestModal
+   * @description Top level function to handle when user requests additional restaurant info.
+  */
   function runRestModal() {
     renderRestModal(restInfoArray[parseInt($(this).attr('data-index'))]); 
   }
 
+  /** 
+   * @event .on ("click") 
+   * @listens .radio-button User changes map radius. 
+   * @param {function} changeCheckedRadius
+  */
   $('.radio-button').on('click', changeCheckedRadius);
+
+  /** 
+   * @event .on ("click") 
+   * @listens #btn-addr-submit User submits address via modal. 
+   * @param {function} processAddrModal
+  */
   $('#btn-addr-submit').on('click', processAddrModal);
+
+  /** 
+   * @event .on ("click") 
+   * @listens .reload User closes address modal (X or close), user closes or submits refresh via error modal. 
+   * @param {function} reloadPage
+  */
   $('.reload').on('click', reloadPage);
+
+  /** 
+   * @event .on ("click") 
+   * @listens [id^=item-] User clicks restaurant for additional info. 
+   * @param {function} runRestModal
+  */
   $(document).on('click', '[id^=item-]', runRestModal);
 });
 
