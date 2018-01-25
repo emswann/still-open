@@ -52,6 +52,28 @@ function Hours(periodArray, weekdayTextArray) {
     });
 
     /** 
+     * @function DayOfWeek.adjustCloseDay 
+     * @description Determines if restaurant has open time in one day and close time in the far off future (> the next day). This occurs when restaurant switches from set hours to 24 hours within the week.
+     * @param {Object} periodObj - Period info to determine adjustment.
+     * @returns {number} Close day or adjusted day for far off future close days.
+    */ 
+    var adjustCloseDay = (periodObj => {
+      const OPEN_TO_CLOSE_MAP = [1, 2, 3, 4, 5, 6, 0];
+
+      var openObj  = periodObj.open;
+      var closeObj = periodObj.close;
+      var closeDay = periodObj.close.day;
+
+      if (openObj.day !== closeObj.day) {
+        /* Set to be at most one day of the week into the future. */
+        closeDay = OPEN_TO_CLOSE_MAP[openObj.day];
+      }
+      /* else return original day */
+
+      return closeDay;
+    });
+
+    /** 
      * @function DayOfWeek.checkFor24Hrs 
      * @description Determines if restaurant is open 24 hours.
      * @param {string} text - String checked for 24 hour regular expression.
@@ -72,7 +94,7 @@ function Hours(periodArray, weekdayTextArray) {
     var checkForCrossover = (periodObj => {
       var isCrossover = false;
 
-      /* Need to check special case of when close day wrap around to 0. */
+      /* Need to check special case of when close day wrap around to 0. Only need to check one day in the future since the close day has already been checked and adjusted if needed. */      
       if ((periodObj.close.day > periodObj.open.day) 
           || ((periodObj.close.day === 0) && (periodObj.open.day === 6))) {
         isCrossover = true;
@@ -99,6 +121,9 @@ function Hours(periodArray, weekdayTextArray) {
                         || (this.isOpen24Hrs))
       ? addDefaultPeriod(currDayIndex)
       : periodObj;
+
+    /* Needs to be done after addDefaultPeriod and before checkForCrossover. */
+    tmpPeriodObj.close.day = adjustCloseDay(tmpPeriodObj);
 
     this.open        = {day    : tmpPeriodObj.open.day,
                         time   : tmpPeriodObj.open.time,

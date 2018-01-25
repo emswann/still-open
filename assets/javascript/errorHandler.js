@@ -10,6 +10,8 @@
  * @param {string} error - Displayed error message.
 */
 function processError(error) {
+  const MESSAGE = 'Google Maps was unable to process the request.';
+
   $('#err-modal-body').empty();
   $('#info-modal').modal('hide');
   $('#addr-modal').modal('hide');
@@ -17,7 +19,7 @@ function processError(error) {
 
   console.log(error);
 
-  var errModalLine = $('<h3>').text(error);
+  var errModalLine = $('<h3>').text(MESSAGE);
 
   $('#err-modal-body').append(errModalLine);
 }
