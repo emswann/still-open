@@ -354,6 +354,7 @@ $(document).ready(function () {
         });
         
     var geocoder = new google.maps.Geocoder();
+    markerArray = [];
 
     geocoder.geocode({
       address: address
