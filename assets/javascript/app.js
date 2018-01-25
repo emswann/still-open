@@ -303,6 +303,7 @@ $(document).ready(function () {
   */
   createMarkers = function (latlng, name) {
     var geocoder = new google.maps.Geocoder();
+    markerArray = [];
 
     geocoder.geocode({
       address: latlng
