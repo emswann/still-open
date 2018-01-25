@@ -5,7 +5,7 @@
 */
 
 /** 
- * @function renderList (self-invoking)
+ * @function renderList 
  * @description Renders restaurant list and adds restaurant markers on map.
  * @param {Object[]} listArr - Restaurant objects to render. Max of 10.
 */
@@ -19,7 +19,7 @@ function renderList(listArr) {
   var nowMoment = moment();
 
   /** 
-  * @function createList 
+  * @function createList (self-invoking)
   * @description Renders restaurant list and adds restaurant markers on map. If no restaurants available, renders message to webpage.
   */
   (function createList() {
@@ -95,7 +95,7 @@ function renderList(listArr) {
         }
  
         container.append(rest);
-        createMarkers(listArr[i].addressStr, listArr[i].nameStr);
+        createMarkers(listArr[i].addressStr, listArr[i].nameStr, listArr[i].phoneStr, listArr[i].cost, listArr[i].websiteStr);
       }
 
       var nextBtnRow = $('<div>')
@@ -125,4 +125,6 @@ function renderList(listArr) {
       container.append(messageDiv);
     }
   })();
+
+  
 }

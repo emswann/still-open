@@ -22,6 +22,7 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+    <!-- Fonts used -->    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100&effect=neon">
 
     <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet">
@@ -91,7 +92,7 @@
                     <button type="button" class="close reload" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="addr-modal-title">Please enter address to find location.<br>At least city/state or zip code.</h4>
+                    <h4 class="modal-title text-center" id="addr-modal-title">Please enter an address so that we can find the closest open restaurants!<br>At least city/state or zip code.</h4>
                 </div>
                 <div class="modal-body" id="addr-modal-body">
                     <form>
@@ -152,16 +153,21 @@
     </div>
 
     <div class="container" id="main-content">
+        <div class="row info">
+            <h3 class="text-center blurb">Welcome to Still Open. The app that easily finds all the currently open restaurants near you. 
+                <br>
+            Never ask <span id="catch-phrase">"What's still open?"</span> again!</h3>
+        </div>
         <div class="col-xs-12 col-sm-12 col-md-6" id="list-container">
-            <!-- <div class="row">
-                <button type="button" class="btn btn-default btn-next">NEXT</button>
-            </div> -->
         </div>
         <div class="col-xs-12 col-sm-12 col-md-6" id="map-container">
             <div class="row">
+                <div id="legend">
+                </div>
                 <div id="map"></div>
             </div>
             <div class="row text-center" id="radius">
+                <div class="btn btn-default" id="center-map">Center Map</div>
                 <div class="radio btn btn-default">
                     <label>
                         <input type="radio" name="radius" class = "radio-button" id="radio-button-1" value="">
@@ -179,7 +185,8 @@
                         <input type="radio" name="radius" class = "radio-button" id="radio-button-3" value="">
                         4 mile
                     </label>
-                </div>           
+                </div>   
+                <h4 class="blurb">Change your search radius with these!</h4>        
             </div>
         </div>
     </div>
