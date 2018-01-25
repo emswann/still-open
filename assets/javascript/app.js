@@ -336,9 +336,12 @@ $(document).ready(function () {
 
   /**
    * @function createMarkers
-   * @description Adds restaurant markers to the map using Google Geocoder, Marker.
+   * @description Adds restaurant markers with info windows to the map using Google Geocoder, Marker.
    * @param {string} address - Restaurant address
    * @param {string} name - Restaurant name.
+   * @param {string} phone - Restaurant phone number.
+   * @param {string} cost - Restaurant cost.
+   * @param {string} url - Restaurant website.
   */
   createMarkers = function (address, name, phone, cost, url) {
     
