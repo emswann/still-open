@@ -12,8 +12,10 @@ $(document).ready(function () {
   var map, location, marker, geocoder, service, bounds, restMarkers, oms;
   var searchAPIArray = [];
   var restInfoArray = [];
-  var markerArray = [];
+  var markerArray;
   var meterCount;
+  var legend = document.getElementById('legend');
+     
 
   /** 
    * @function initialize (self-invoking)
@@ -22,6 +24,8 @@ $(document).ready(function () {
   (function initialize() {
     $('.radio-button').prop('disabled', true);
     $('#radius').hide();
+    $('#legend').hide();
+    $('#center-map').hide();
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(googleMap, promptUserAddr);
     } 
@@ -58,44 +62,79 @@ $(document).ready(function () {
    * @description Renders map using Google Maps, Marker, and Spiderfier.
   */
   function renderMap() {
+    markerArray = [];      
+    $("#list-container").empty();
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 100,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
+    
     marker = new google.maps.Marker({
-      map: map,
-      position: location,
-      animation: google.maps.Animation.DROP,
-      title: 'This is your location',
-      icon: 'assets/images/bluemarker.png'
+        map: map,
+        position: location,
+        animation: google.maps.Animation.DROP,
+        title: 'This is your location',
+        icon: 'assets/images/myLocation.png'
     });
-
+    
     map.setCenter(location);
     
     oms = new OverlappingMarkerSpiderfier(map, {
-      markersWontMove: true,
-      markersWontHide: true
-    });
-
-    oms.addListener('format', function(marker, status) {
-      var iconURL = 
-        status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIED 
-          ? 'assets/images/greenmarker.png' 
-          : status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE 
-            ? 'assets/images/pinkmarker.png' 
-            : status == OverlappingMarkerSpiderfier.markerStatus.UNSPIDERFIABLE
-              ? 'assets/images/greenmarker.png' 
-              : null;
-      marker.setIcon({
-        url: iconURL
-      });
+        markersWontMove: true,
+        markersWontHide: true,
+        keepSpiderfied: true
     });
     
+    oms.addListener('format', function(marker, status) {
+        var iconURL = 
+        status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIED 
+        ? 'assets/images/restMarker.png' 
+        : status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE 
+        ? 'assets/images/groupMarker.png' 
+        : status == OverlappingMarkerSpiderfier.markerStatus.UNSPIDERFIABLE
+        ? 'assets/images/restMarker.png' 
+        : null;
+        marker.setIcon({
+            url: iconURL
+        });
+    });
+    
+    createLegend();
     $('#map').css('box-shadow', '0px 0px 10px #3be1ec, 0px 0px 10px #3be1ec');
+    $('#center-map').show();
+    $('#legend').show();
     $('#radius').show();
     getRestaurants();
   }
+
+  /** 
+   * @function createLegend
+   * @description Creates a legend within the Google Map div.
+  */
+  function createLegend() {
+    while (legend.firstChild) legend.removeChild(legend.firstChild);
+      
+    var title = document.createElement('h4');
+    title.innerHTML = 'Legend';
+    legend.appendChild(title);
+
+    var div = document.createElement('div');
+    div.innerHTML = '<span><img src="assets/images/myLocation.png">Your Location</span>';
+    legend.appendChild(div);
+    
+    var div = document.createElement('div');
+    div.innerHTML = '<span><img src="assets/images/restMarker.png">Restaurants</span>';
+    legend.appendChild(div);
+    
+    var div = document.createElement('div');
+    div.innerHTML = '<span><img src="assets/images/groupMarker.png">Group of Restaurants</span>';
+    legend.appendChild(div);
+
+    map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
+  }
+
+  $('#center-map').on('click', centerMap);
 
   /** 
    * @function centerMap
@@ -298,14 +337,23 @@ $(document).ready(function () {
   /**
    * @function createMarkers
    * @description Adds restaurant markers to the map using Google Geocoder, Marker.
-   * @param {Object} latlng - Google API specific latitude/longitude object.
+   * @param {string} address - Restaurant address
    * @param {string} name - Restaurant name.
   */
-  createMarkers = function (latlng, name) {
+  createMarkers = function (address, name, phone, cost, url) {
+    
+        var infoContent = 
+        '<div class="info-content"><h4 id="rest-name">' + name + '</h4><br><P>Address: ' + address + '<br>Cost: ' + cost + '<br>Phone: ' + phone + '<br>URL: <a href="' + url + '" target="_blank">' + url + '</a></P></div>';
+        
+    
+        var infoWindow = new google.maps.InfoWindow({
+            content: ''
+        });
+        
     var geocoder = new google.maps.Geocoder();
 
     geocoder.geocode({
-      address: latlng
+      address: address
     }, function (results, status) {
       if (status === google.maps.GeocoderStatus.OK) {
         console.log('GeoCoder: ', results);
@@ -315,8 +363,17 @@ $(document).ready(function () {
             position: results[0].geometry.location,
             animation: google.maps.Animation.DROP,
             title: name,
+            info: infoContent
           }));
           for (var i = 0; i < markerArray.length; i++) {
+              markerArray[i].addListener('dblclick', function() {
+                  infoWindow.close();
+                  infoWindow.setContent(this.info);
+                  infoWindow.open(map, this)
+                });
+                map.addListener('click', function() {
+                    infoWindow.close();
+                })
             var element = markerArray[i];
             oms.addMarker(element)
           }
@@ -328,6 +385,8 @@ $(document).ready(function () {
         console.log('Geocoder error: Marker for ' + name + ' not added.');
       }
     });
+
+    
   }
 
   /**
