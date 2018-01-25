@@ -140,67 +140,89 @@ $(document).ready(function () {
    * @description Complete processing to go from API search data to Restaurant detail info in a app friendly format. Uses Google Places, Google Places Details.
   */
   async function getRestaurants() {
-    const MAX_QUERY_SIZE = 9;
-    const NUMBER_OF_RAD_BUTTONS = 3
-    const METERS_TO_MILES = [0, 1609.34, 3218.69, 6437.38];
-
-    var dummyVar = 0;
-    var detailAPIArray = [];
-
-    for (var i = 1; i <= NUMBER_OF_RAD_BUTTONS; i++) {
-      var element = $('#radio-button-' + i)
-      var meters = [0, 1609.34, 3218.69, 6437.38];
-      if (element.prop('checked')) {
-        meterCount = METERS_TO_MILES[i]
-      }
-        console.log(meterCount)
-    }
-
-    /* Use current location (global variable) to determine restaurant list. */
-    console.log('RL Latitude: ' + location.lat());
-    console.log('RL Longitude: ' + location.lng());
-    service = new google.maps.places.PlacesService(map);
-
     try {
-      searchAPIArray = await nearBySearch();
-      dummyVar = await delayProcess(1000);
-    }
-    catch(error) {
-      processError(error);
-    }
-    console.log('S: ', searchAPIArray);
+      var getRStart = moment();
 
-    var chunkArray = divideArray(searchAPIArray, MAX_QUERY_SIZE);
-    console.log('Chunk: ', chunkArray);
+      const MAX_QUERY_SIZE = 1;
+      const NUMBER_OF_RAD_BUTTONS = 3
+      const METERS_TO_MILES = [0, 1609.34, 3218.69, 6437.38];
 
-    var result;
-    for (let i = 0; i < chunkArray.length; i++) {
-      try {
-        result = await processSlice(chunkArray[i]);
-        dummyVar = await delayProcess(4000);
+      var dummyVar = 0;
+      var detailAPIArray = [];
+
+      for (var i = 1; i <= NUMBER_OF_RAD_BUTTONS; i++) {
+        var element = $('#radio-button-' + i)
+        var meters = [0, 1609.34, 3218.69, 6437.38];
+        if (element.prop('checked')) {
+          meterCount = METERS_TO_MILES[i]
+        }
+          console.log(meterCount)
       }
-      catch (error) {
-        /* Wait and try one more time. Then forget about it. Go ahead and fail. */
+
+      /* Use current location (global variable) to determine restaurant list. */
+      console.log('RL Latitude: ' + location.lat());
+      console.log('RL Longitude: ' + location.lng());
+      service = new google.maps.places.PlacesService(map);
+
+      try {
+        searchAPIArray = await nearBySearch();
+        dummyVar = await delayProcess(100);
+      }
+      catch(error) {
+        throw(error);
+      }
+      console.log('S: ', searchAPIArray);
+
+      var chunkArray = divideArray(searchAPIArray, MAX_QUERY_SIZE);
+      console.log('Chunk: ', chunkArray);
+
+      var detailsStart = moment();
+
+      var detailsDelay = 120;
+      var result;
+      for (let i = 0; i < chunkArray.length; i++) {
         try {
-          dummyVar = await delayProcess(4000);
           result = await processSlice(chunkArray[i]);
-          dummyVar = await delayProcess(4000);
+          dummyVar = await delayProcess(detailsDelay);
         }
         catch (error) {
-          processError(error);
+          /* Wait and try one more time. Then forget about it. Go ahead and fail. */
+          try {
+            console.log('Google Places Details failed...trying again.');
+
+            /* Google requires 1 second wait before requesting again after a failure. */
+            dummyVar = await delayProcess(1100);
+            result = await processSlice(chunkArray[i]);
+            dummyVar = await delayProcess(detailsDelay);
+          }
+          catch (error) {
+            throw(error);
+          }
         }
+
+        /* Do this after the delay. */
+        console.log('D-' + i + ': ', result);
+        detailAPIArray = detailAPIArray.concat(result);
       }
 
-      /* Do this after the delay. */
-      console.log('D-' + i + ': ', result);
-      detailAPIArray = detailAPIArray.concat(result);
+      var detailsEnd = moment();
+      console.log('Elapsed Time - details: ', moment.duration(detailsEnd.diff(detailsStart)));
+
+      restInfoArray = new Restaurants(searchAPIArray, detailAPIArray);
+      console.log('R: ', restInfoArray);
+
+      renderList(restInfoArray);
+
+      var getRStop = moment();
+      console.log('Elapsed Time - getRests: ', moment.duration(getRStop.diff(getRStart)));
+
+      /* Delay radius button availability a bit to make sure have enough time passed to query the APIs again. */
+      dummyVar = await delayProcess(500);
+      $('.radio-button').prop('disabled', false);
     }
-
-    $('.radio-button').prop('disabled', false);
-    restInfoArray = new Restaurants(searchAPIArray, detailAPIArray);
-    console.log('R: ', restInfoArray);
-
-    renderList(restInfoArray);
+    catch (error) {
+      processError(error);
+    }
   }
 
   /**
