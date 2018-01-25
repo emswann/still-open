@@ -20,6 +20,9 @@ No prior software needed to run
 ## Built With
 
 * [Google Places](https://developers.google.com/places/documentation/) - Used library to interact with Places API
+* [Google Maps](https://developers.google.com/maps/) - Used library to interact with Maps API
+* [Google Geocoder](https://developers.google.com/maps/documentation/geocoding/intro) - Used geocoder to find user location
+* [Google Fonts](https://fonts.google.com/) - Used google fonts to style page
 * [Jquery](https://jquery.com/) - Javascript library
 * [Bootstrap](https://getbootstrap.com/) - Web framework
 * [Moment](https://momentjs.com/) - Time library for easy time manipulation
