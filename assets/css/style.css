@@ -85,6 +85,7 @@ body {
     color: #fff;
     font-family: 'Ubuntu Condensed', sans-serif;
     text-shadow: 0 0 3px #3be1ec;
+    white-space: normal;
 }
 
 #btn-rest-next {
@@ -151,6 +152,7 @@ body {
 .info-content {
     user-select: none;
 }
+
 #radius {
     margin-top: 10px;
     animation: slide-up 0.4s ease;
