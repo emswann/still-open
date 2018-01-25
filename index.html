@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- HTML file to execute the Still Open application. 
+     NAME: index.html
+     AUTHOR: Robert Brown, Joshua Lewis, Elaina Swann
+     DATE: 01/25/2018
+     REVISION LOG:
+-->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Still Open" />
+    <meta name="keywords" content="Restaurants, Still Open" />
+    <meta name="author" content="Robert Brown, Joshua Lewis, Elaina Swann" />
+
     <title>Still Open?</title>
 
     <!-- Latest compiled and minified CSS -->
@@ -29,6 +41,7 @@
     <!-- Moment JavaScript library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 
+    <!-- Spiderfier JavaScript library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier/1.0.3/oms.min.js"></script>
 
     <!-- Application specific javascript -->
@@ -139,18 +152,15 @@
     </div>
 
     <div class="container" id="main-content">
-
         <div class="col-xs-12 col-sm-12 col-md-6" id="list-container">
             <!-- <div class="row">
                 <button type="button" class="btn btn-default btn-next">NEXT</button>
             </div> -->
         </div>
         <div class="col-xs-12 col-sm-12 col-md-6" id="map-container">
-
             <div class="row">
                 <div id="map"></div>
             </div>
-
             <div class="row text-center" id="radius">
                 <div class="radio btn btn-default">
                     <label>
@@ -171,11 +181,8 @@
                     </label>
                 </div>           
             </div>
-
         </div>
-
     </div>
-
 </body>
 
 </html>

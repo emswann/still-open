@@ -1,12 +1,27 @@
+/**
+ * @file Defines Restaurant List rendering functionality for the Still Open application. 
+ * @author Robert Brown, Joshua Lewis, Elaina Swann
+ * @version 1.0 
+*/
+
+/** 
+ * @function renderList (self-invoking)
+ * @description Renders restaurant list and adds restaurant markers on map.
+ * @param {Object[]} listArr - Restaurant objects to render. Max of 10.
+*/
 function renderList(listArr) {
   const MAX_COUNT = 10;
-  const TIMEFRAME = 120; // 2 hours or 120 mins.
+  const TIMEFRAME = 120; /* 2 hours or 120 mins. */
 
   var container   = $('#list-container');
   var textStr     = '';
 
   var nowMoment = moment();
 
+  /** 
+  * @function createList 
+  * @description Renders restaurant list and adds restaurant markers on map. If no restaurants available, renders message to webpage.
+  */
   (function createList() {
     container.empty();
 
@@ -33,7 +48,7 @@ function renderList(listArr) {
         rest.append(button);
  
         var buttonRow = $('<div>')
-          .addClass("row");
+          .addClass('row');
         button.append(buttonRow);
  
         var restInfo = $('<div>')
@@ -62,7 +77,7 @@ function renderList(listArr) {
         closeInfoCol.append(closeInfoTxt);
  
         var alertInfo = $('<div>')
-          .addClass("row");
+          .addClass('row');
         timeInfo.append(alertInfo);
  
         var alertInfoCol = $('<div>')

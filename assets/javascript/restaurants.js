@@ -1,6 +1,26 @@
+/**
+ * @file Constructs Restaurants and Restaurant objects for the Still Open application. 
+ * @author Robert Brown, Joshua Lewis, Elaina Swann
+ * @version 1.0 
+*/
+
+/** 
+ * @constructor Restaurants
+ * @constructs {Object[]} Restaurant objects array.
+ * @param {Object[]} searchAPIArray - Google Places (Nearby Search) array. Contains restaurants ordered by distance to center (ascending).
+ * @param {Object[]} detailAPIArray - Google Places Details array. Contains detail info for each restaurant returned by Nearby Search.
+ * @returns {Object[]} Restaurant objects array.
+*/
 function Restaurants(searchAPIArray, detailAPIArray) {
 
-  var sortArray = (refArray, sortArray) => {
+  /** 
+    * @function Restaurants.sortArray 
+    * @description Sorts restaurant array based on Nearby Search order. Required due to asynchronous processing for Google Places Details.
+    * @param {Object[]} refArray - Array to determine sort order.
+    * @param {Object[]} sortArray - Array with data objects to be sorted.
+    * @returns {Object[]} Array sorted by distance to center (ascending).
+  */
+  var sortArray = ((refArray, sortArray) => {
     sortedArray = [];
 
     if (refArray.length === sortArray.length) {
@@ -18,11 +38,22 @@ function Restaurants(searchAPIArray, detailAPIArray) {
     }
 
     return sortedArray;
-  }
-    
+  });
+
+  /** 
+  * @constructor Restaurant
+  * @constructs {Object} Object with restaurant detail info in a format easily used by the app.
+  * @param {Object} apiObj - Google Places Details object.
+  */    
   function Restaurant(apiObj) {
 
-    var formatCost = costNum => {
+    /** 
+      * @function Restaurant.formatCost 
+      * @description Converts cost integer to text.
+      * @param {number} costNum - Integer cost.
+      * @returns {string} Text cost in $.
+    */
+    var formatCost = (costNum => {
       var costStr = '';
 
       switch (costNum) {
@@ -42,13 +73,19 @@ function Restaurants(searchAPIArray, detailAPIArray) {
       }
 
       return costStr;
-    }
+    });
 
-    var formatHours = (periodArray, weekdayTextArray) => {
+    /** 
+      * @function Restaurant.formatHours 
+      * @description Creates Hours array.
+      * @param {Object[]} periodArray - Open/close time info per day of the week.
+      * @param {array} weekdayTextArray - Time string per day of the week.
+      * @returns {Object[]} Hours array.
+    */
+    var formatHours = ((periodArray, weekdayTextArray) => {
       return new Hours(periodArray, weekdayTextArray);
-    }
+    });
 
-    // Assumes always add because validated beforehand.
     this.place_id        = apiObj.place_id;
     this.locationObj     = apiObj.geometry.location;
     this.nameStr         = apiObj.name;
@@ -62,12 +99,38 @@ function Restaurants(searchAPIArray, detailAPIArray) {
                             : 'No website info';
   }
 
+  /** 
+  * @method isClosing
+  * @description Determines if restaurant is within closing window.
+  * @param {Object} currTime - Current (moment) time.
+  * @param {number} timeFrame - Closing window in minutes.
+  * @returns {Object} sendAlert {boolean}: within closing window.
+  *                   timeLeft {number}: minutes left until closing.
+  *                   closeTimeStr {string}: closing time (military hrs:mins).
+  *                   isOpen24Hrs {boolean}: open 24 hrs.
+  */
   Restaurant.prototype.isClosing = function (currTime, timeFrame) {
+
+    /** 
+      * @function checkForUserCrossover 
+      * @description Determines if user has crossed over into next day.
+      * @param {Object} currTime - Current (moment) time.
+      * @param {Object} hoursInfo - Open/close time info.
+      * @returns {boolean} User has crossed over.
+    */
     var checkForUserCrossover = (currTime, openTime) => {
       return (currTime.isBefore(openTime)) ? true : false;
     }
 
-    var setTimes = (currTime, hoursInfo) => {
+    /** 
+      * @function setTimes 
+      * @description Sets open and close times based on input parameters.
+      * @param {Object} currTime - Current (moment) time.
+      * @param {Object} hoursInfo - Open/close time info.
+      * @returns {Object} openTime {Object}: Open (moment) time.
+      *                   closeTime {Object}: Close (moment) time.
+    */
+    var setTimes = ((currTime, hoursInfo) => {
       return ({openTime:  moment().set({'year':        currTime.year(),
                                         'month':       currTime.month(),
                                         'date':        currTime.date(),
@@ -85,7 +148,7 @@ function Restaurants(searchAPIArray, detailAPIArray) {
                                         'millisecond': 0
                                       })
       });
-    }
+    });
 
     const INTERVAL = 15;
     const CLOSE_TEXT_POS = -8;
@@ -104,24 +167,24 @@ function Restaurants(searchAPIArray, detailAPIArray) {
     if (!hoursInfo.isOpen24Hrs) { 
       timeObj = setTimes(currTime, hoursInfo);
 
-      /* If user has crossed over, then need to revert to previous day information. */
+      /* If user crossed over, need to revert to previous day info. */
       if (checkForUserCrossover(currTime, timeObj.openTime)) {
-        // Cloning so we do not mutate/change current time.
+        /* Cloning so do not mutate/change current time. */
         var prevTime = moment(currTime).subtract(1, 'd');
         var prevDayOfWeek = prevTime.day(); 
 
         var prevHoursInfo  = this.hoursArray[prevDayOfWeek];
 
-        /* Reload the time data with the previous day information and reset. */
+        /* Reload time data with previous day info & reset. */
         timeObj = setTimes(prevTime, prevHoursInfo);
       }
     
-      /* This will work any time the day is a crossover (user time is in the same day or next day) because we have adjusted to the previous day earlier. NOTE: This step must follow the check for isUserCrossover because we need either the current or previous day data. */
+      /* This will work any time the day is a crossover (user time in same day or next day) because have adjusted to previous day earlier. NOTE: This step must follow check for user crossover because may need either current or previous day data. */
       if (hoursInfo.isCrossover) {
         timeObj.closeTime.add(1, 'd');
       }
 
-      // Cloning so we do not mutate/change current time.
+      /* Cloning so do not mutate/change current time. */
       if (moment(currTime).add(timeFrame, 'm').isAfter(timeObj.closeTime)) {
         sendAlert = true;
         timeLeft = 
@@ -132,7 +195,7 @@ function Restaurants(searchAPIArray, detailAPIArray) {
       closeTimeStr = closeTimeTxt.substr(CLOSE_TEXT_POS).trim();
     }
     else {
-      // sendAlert is already set to false.
+      /* sendAlert is already set to false. */
       closeTimeStr = OPEN_24_HRS_STR;
     }
  
@@ -146,12 +209,11 @@ function Restaurants(searchAPIArray, detailAPIArray) {
   return (() => {
     var restaurantArray = [];
 
-    /* Need to preserve the sorted order of the array with for vs. forEach. Constructor assumes all objects are added to restaurant array: list has already been scrubbed for null/undefined or permanently closed restaurants. */
-    detailAPIArray.forEach(place => 
+    /* Constructor assumes all objects are added. List has been scrubbed for null/undefined or permanently closed restaurants. */
+    detailAPIArray.forEach(place =>  
       restaurantArray.push(new Restaurant(place))
     );
 
-    /* Need to sort by order of original sort array, since order may have changed due to async processing. */
     return sortArray(searchAPIArray, restaurantArray);
   })(); 
 }

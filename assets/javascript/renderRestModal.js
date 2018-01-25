@@ -1,3 +1,14 @@
+/**
+ * @file Defines Additional Restaurant Info rendering functionality for the Still Open application. 
+ * @author Robert Brown, Joshua Lewis, Elaina Swann
+ * @version 1.0 
+*/
+
+/** 
+ * @function renderRestModal
+ * @description Renders additional restaurant info to restaurant modal.
+ * @param {Object} restObj - Restaurant object to display info.
+*/
 function renderRestModal(restObj) {
 
   $('#info-modal-body').empty();
@@ -19,7 +30,7 @@ function renderRestModal(restObj) {
 
   modalLine = $('<a>', {
     href:   restObj.websiteStr,
-    target: "_blank",
+    target: '_blank',
     class: 'rest-link'
   });
 

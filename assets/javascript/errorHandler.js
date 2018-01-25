@@ -1,12 +1,23 @@
+/**
+ * @file Defines Error Handling functionality for the Still Open application. 
+ * @author Robert Brown, Joshua Lewis, Elaina Swann
+ * @version 1.0 
+*/
+
+/** 
+ * @function processError 
+ * @description Pops up error modal containing error message info and refresh button to reload webpage.
+ * @param {string} error - Displayed error message.
+*/
 function processError(error) {
-    $('#err-modal-body').empty();
-    $('#info-modal').modal("hide");
-    $('#addr-modal').modal("hide");
-    $('#err-modal').modal("show");
+  $('#err-modal-body').empty();
+  $('#info-modal').modal('hide');
+  $('#addr-modal').modal('hide');
+  $('#err-modal').modal('show');
 
-    console.log(error);
+  console.log(error);
 
-    var errModalLine = $('<h3>').text(error);
+  var errModalLine = $('<h3>').text(error);
 
-    $('#err-modal-body').append(errModalLine);
-};
+  $('#err-modal-body').append(errModalLine);
+}
